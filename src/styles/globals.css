@@ -1,0 +1,44 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+/* Define CSS Variables */
+:root {
+    --font-jersey-mono: 'Jersey 10', sans-serif;
+    --font-russo-sans: 'Russo One', sans-serif;
+    --font-roboto-sans: 'Roboto', sans-serif;
+  }
+
+  @keyframes gradientAnimation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .gradient-text {
+    margin: 1rem 0;
+    background-image: radial-gradient(
+      circle at 10% 20%,
+      rgb(222, 168, 248) 0%,
+      rgb(168, 222, 248) 25%,
+      rgb(189, 250, 205) 50%,
+      rgb(243, 250, 189) 75%,
+      rgb(250, 227, 189) 90%,
+      rgb(248, 172, 172) 95%,
+      rgb(254, 211, 252) 100%
+    );
+    background-size: 200% 200%; /* Increase size for smooth animation */
+    animation: gradientAnimation 5s ease infinite; /* Animation properties */
+    color: transparent;
+    -webkit-background-clip: text; /* For Safari */
+    background-clip: text;
+  }
