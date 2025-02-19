@@ -11,7 +11,13 @@ export const projectRouter = createTRPCRouter({
         type:"PROJECT",
         status: "PUBLIC"
     },
-      orderBy: { createdAt: "desc" },
+    orderBy: { createdAt: "desc" },
+    select:{
+      id: true,
+      name: true,
+      image: true,
+      url: true,
+    }
     });
 
     return post ?? null;

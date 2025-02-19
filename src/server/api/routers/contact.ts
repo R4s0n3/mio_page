@@ -9,7 +9,10 @@ import {
         where:{
           user:{
             email: {
-              in: ["pascal@miomideal.com", "achim@miomideal.com"],
+              in: ["pascal@miomideal.com", "heinachim@gmx.de"],
+            },
+            role: {
+              in:["ADMIO", "GORLAMI"]
             }
           }
         },

@@ -4,7 +4,7 @@ import Link from "next/link"
 const socialLinks: SocialListItem[] = [
     {
         id:"discord",
-        link:"https://discord.gg/WnmbAu8jfx",
+        link:"https://discord.gg/S7c48jzmnY",
         icon:"discord"
     },
     {
@@ -14,7 +14,7 @@ const socialLinks: SocialListItem[] = [
     },
     {
         id:"tiktok",
-        link:"https://tiktok.com/miomideal",
+        link:"https://tiktok.com/@mio.mideal",
         icon:"tiktok"
     },
     {

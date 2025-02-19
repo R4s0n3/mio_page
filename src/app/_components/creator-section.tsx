@@ -1,19 +1,33 @@
+'use client'
 import Link from "next/link";
 import Image from "next/image";
+import { api } from "@/trpc/react";
 
-type CreatorSectionProps = {
-    creators: CreatorItemType[]
-}
 
-export default function CreatorSection(props: CreatorSectionProps){
+export default function CreatorSection(){
+    const [creators] = api.contact.getCreators.useSuspenseQuery()
+
+    const madeCreators = creators.map(c => ({
+      sig: c.user.sig,
+      name: c.user.name,
+      title: c.user.title,
+      email: c.email,
+      youtube: c.youtube,
+      instagram: c.instagram,
+      twitter: c.twitter,
+      twitch: c.twitch,
+      tiktok: c.tiktok,
+      reddit: c.reddit
+    }))
     function renderCreators(item: CreatorItemType, idx: number){
         return <CreatorsItem 
             key={idx}
             item={item}
         />
     }
+
     return <div className="w-full flex flex-col lg:flex-row gap-8">
-        {props.creators.map(renderCreators)}
+        {madeCreators.map(renderCreators)}
     </div>
 }
 

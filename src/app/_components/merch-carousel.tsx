@@ -1,3 +1,5 @@
+'use client'
+import { api } from '@/trpc/react';
 import EmblaCarousel from './carousel/carousel'
 import "@/styles/carousel/style.css"
 
@@ -10,10 +12,15 @@ export type ProductItemType = {
     price: number | null;
 }
 
-type MerchCarouselProps = {
-    items: ProductItemType[]
-}
-
-export default function MerchCarousel(props:MerchCarouselProps){
-    return <EmblaCarousel slides={props.items} options={{}} />
+export default function MerchCarousel(){
+    const [items] = api.product.getMerch.useSuspenseQuery()
+    const madeItems = items.map(i => ({
+        id: i.id,
+        description: i.description,
+        name: i.name,
+        type: i.type.name,
+        image:i.image,
+        price: i.price
+    }))
+    return <EmblaCarousel slides={madeItems} options={{}} />
 }

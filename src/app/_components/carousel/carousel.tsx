@@ -9,9 +9,19 @@ import {
 } from './carousel-arrow-button'
 import Image from 'next/image'
 import Link from 'next/link'
+
 import useEmblaCarousel from 'embla-carousel-react'
-import type { ProductItemType } from '../merch-carousel'
 import { priceToDisplay } from '@/server/util/functions'
+import "@/styles/carousel/style.css"
+
+ export type ProductItemType = {
+    type: string;
+    description: string | null;
+    id: string;
+    name: string;
+    image: string | null;
+    price: number | null;
+}
 
 type PropType = {
   slides: ProductItemType[]
@@ -50,7 +60,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
               </div>
               <div className='flex justify-between'>
                 <h5 className='text-3xl font-subhead'>{priceToDisplay(slide.price ?? 0).toFixed(2)}€</h5>
-                <Link className=' transition duration-300 text-3xl font-subhead group-hover:text-accent' href={`https://shop.miomideal.com/product/${slide.id}`}>Buy now</Link>
+                <Link className=' transition duration-300 text-3xl font-subhead group-hover:text-accent' href={`product/${slide.id}`}>Buy now</Link>
               </div>
               </div>
             </div>
@@ -58,13 +68,13 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         </div>
       </div>
 
-      <div className="embla__controls">
-        <div className="embla__buttons">
+      <div className="flex justify-between mt-5">
+        <div className="flex gap-2">
           <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
           <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
         </div>
 
-        <div className="embla__dots">
+        <div className="flex flex-wrap gap-4 justify-end items-center">
           {scrollSnaps.map((_, index) => (
             <DotButton
               key={index}

@@ -31,7 +31,6 @@
   },
  "include": [
     "post-build.mjs",
-    "templates/**/*.cjs", // Add this line
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
