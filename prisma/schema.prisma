@@ -65,6 +65,10 @@ model Order {
   user     User?          @relation(fields: [userId], references: [id])
   items    OrderProduct[]
   cartRef  String         @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
 
 model Shipping {
@@ -205,11 +209,16 @@ enum PostStatus {
 }
 
 enum OrderStatus {
-  CART
-  PENDING
-  SHIPPED
-  COMPLETE
-  CANCELLED
-  DECLINED
-  REFUND
+  CART        // Initial state when items are added to the cart but not yet purchased
+  PENDING     // Order has been created but payment has not yet been confirmed
+  PROCESSING  // Payment has been confirmed, and the order is being prepared for shipment
+  SHIPPED     // The order has been shipped and is on its way to the customer
+  DELIVERED   // The order has been delivered to the customer
+  COMPLETED   // The order has been successfully completed, and all processes are finalized
+  CANCELLED   // The order has been cancelled by the customer or the seller
+  DECLINED    // The payment was declined, and the order cannot be processed
+  REFUND      // The order has been refunded, either partially or fully
+  RETURNED    // The customer has returned the order, and it is being processed
+  EXCHANGED    // The customer has exchanged the order for a different item
+  ON_HOLD     // The order is on hold for some reason, such as payment verification or stock issues
 }
