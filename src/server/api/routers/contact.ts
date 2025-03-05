@@ -26,7 +26,7 @@ import {
           }
         }
       });
-      return contacts ?? null;
+      return contacts ?? [];
     }),
   });
   

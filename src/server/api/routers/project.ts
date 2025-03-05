@@ -6,7 +6,7 @@ import {
 
 export const projectRouter = createTRPCRouter({
   getLatest: publicProcedure.query(async ({ ctx }) => {
-    const post = await ctx.db.post.findMany({
+    const posts = await ctx.db.post.findMany({
     where:{
         type:"PROJECT",
         status: "PUBLIC"
@@ -20,6 +20,6 @@ export const projectRouter = createTRPCRouter({
     }
     });
 
-    return post ?? null;
+    return posts ?? [];
   }),
 });

@@ -2,12 +2,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { api } from "@/trpc/react";
+import LoadingSpinner from "./loading-spinner";
 
 
 export default function CreatorSection(){
-    const [creators] = api.contact.getCreators.useSuspenseQuery()
+    const {data: creators, isLoading} = api.contact.getCreators.useQuery()
 
-    const madeCreators = creators.map(c => ({
+    const madeCreators = creators?.map(c => ({
       sig: c.user.sig,
       name: c.user.name,
       title: c.user.title,
@@ -25,9 +26,9 @@ export default function CreatorSection(){
             item={item}
         />
     }
-
+    if(isLoading) return <LoadingSpinner />
     return <div className="w-full flex flex-col lg:flex-row gap-8">
-        {madeCreators.map(renderCreators)}
+        {madeCreators?.map(renderCreators)}
     </div>
 }
 

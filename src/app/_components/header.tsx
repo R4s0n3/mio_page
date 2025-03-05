@@ -19,7 +19,7 @@ export default async function Header () {
           {navLinks.map(createNavLinks)}
         </div>
         <div className="flex gap-4">
-        <Link href="/"><BuildingStorefrontIcon  className="size-6" /></Link>
+        <Link href="https://shop.miomideal.com"><BuildingStorefrontIcon  className="size-6" /></Link>
         </div>
       </div>
     </header>

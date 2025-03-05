@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { api, HydrateClient } from "@/trpc/server";
+import {  HydrateClient } from "@/trpc/server";
 import ProjectsGrid from "./_components/projects-grid";
 import CreatorSection from "./_components/creator-section";
 import MerchCarousel from "./_components/merch-carousel";
@@ -8,13 +8,11 @@ import MerchCarousel from "./_components/merch-carousel";
 
 export default async function Home() {
 
-  void api.project.getLatest.prefetch();
-  void api.contact.getCreators.prefetch();
-  void api.product.getMerch.prefetch();
-
   return (
     <HydrateClient>
+
       <main className="flex min-h-screen flex-col items-center bg-gradient-to-b from-primary-800 to-primary-900 font-subhead text-headings py-20 gap-16">
+     
         <section id="home"  className="container flex flex-col justify-center px-4 pt-16">
         <div className="w-full flex justify-center items-center flex-col gap-4">
           <Image className="logo-animation" alt="mio logo" width={225} height={225} src="/SVG/logo.svg" />
@@ -45,6 +43,7 @@ export default async function Home() {
           </div>
         </section>
       </main>
+
     </HydrateClient>
   );
 }

@@ -2,6 +2,7 @@
 import { api } from '@/trpc/react';
 import EmblaCarousel from './carousel/carousel'
 import "@/styles/carousel/style.css"
+import LoadingSpinner from './loading-spinner';
 
 export type ProductItemType = {
     type: string;
@@ -13,14 +14,18 @@ export type ProductItemType = {
 }
 
 export default function MerchCarousel(){
-    const [items] = api.product.getMerch.useSuspenseQuery()
-    const madeItems = items.map(i => ({
+    const {data:items, isLoading} = api.product.getMerch.useQuery()
+    
+    if(isLoading) return <LoadingSpinner />
+
+    const madeItems = items?.map(i => ({
         id: i.id,
         description: i.description,
         name: i.name,
         type: i.type.name,
         image:i.image,
         price: i.price
-    }))
+    })) ?? []
+    
     return <EmblaCarousel slides={madeItems} options={{}} />
 }

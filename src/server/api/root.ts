@@ -1,9 +1,9 @@
-import { postRouter } from "@/server/api/routers/post";
+import { postRouter }    from "./routers/post";
 import { projectRouter } from "./routers/project";
 import { contactRouter } from "./routers/contact";
+import { productRouter } from "./routers/product";
 
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
-import { productRouter } from "./routers/product";
 
 /**
  * This is the primary router for your server.
