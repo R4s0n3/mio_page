@@ -7,21 +7,10 @@ import {
     getCreators: publicProcedure.query(async ({ ctx }) => {
       const contacts = await ctx.db.contactLinks.findMany({
         where:{
-         OR: [
-      {
-        user: {
-          email: "pascal@miomideal.com",
-          role: "ADMIO"
-        }
-      },
-      {
-        user: {
-          email: "heinachim@gmx.de",
-          role: "ADMIO"
-        }
-      }
-    ]
-  },
+        OR: [
+      { user: { email: "pascal@miomideal.com", role: "ADMIO" } },
+      { user: { email: "heinachim@gmx.de", role: "ADMIO" } }
+        ]
         },
         include:{
           user:{
