@@ -37,7 +37,8 @@ Innovation is our craft. Through creativity and collaboration, we shape ideas in
           <h2 className="text-3xl underline underline-offset-8 font-headline font-extrabold text-highlight-magenta sm:text-[3rem]">MERCH</h2>
           <p className="font-text w-full max-w-md">
 This isn’t really about merch. It’s about that thin line between creating for love and creating to stay afloat. We put our ideas on fabric and paper, not because that’s where they truly belong, but because it keeps our mission alive.
-Every piece carries a fragment of what we’re building, a quiet exchange between our passion and your support. We know it’s not priceless, and that’s okay. Meaning isn’t about perfection; it’s about people choosing to believe in something real, imperfect, growing.</p>
+<br />
+            Every piece carries a fragment of what we’re building, a quiet exchange between our passion and your support. We know it’s not priceless, and that’s okay. Meaning isn’t about perfection; it’s about people choosing to believe in something real, imperfect, growing.</p>
           <div className="w-full">
           <MerchCarousel />
           </div>
