@@ -29,7 +29,7 @@ export default async function Home() {
       <section id="about" className="container flex flex-col gap-8 px-4 py-8">  
           <h2 className="text-3xl underline underline-offset-8 font-headline font-extrabold text-highlight-green sm:text-[3rem]">ABOUT</h2>
           <p className="font-text w-full max-w-md">
-          At Mio Mideal, we’re a dynamic team on a mission to make the world better through bold, innovative projects. With a passion for creativity and a touch of entertainment, we blend problem-solving with joy to craft impactful solutions. Join us in redefining innovation—one exciting idea at a time!
+Innovation is our craft. Through creativity and collaboration, we shape ideas into experiences that inspire, engage, and already make a difference in real-world scenarios. Every project reflects our commitment to bold thinking, meticulous design, and a genuine passion for creating meaningful impact.
           </p>
           <CreatorSection />
         </section>
