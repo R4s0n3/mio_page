@@ -22,7 +22,7 @@ export default async function Home() {
       <section id="projects" className="container flex flex-col gap-8 px-4 py-8">  
           <h2 className="text-3xl underline underline-offset-8 font-headline font-extrabold text-highlight-cyan sm:text-[3rem]">PROJECTS</h2>
           <p className="font-text w-full max-w-md">
-        At Mio Mideal, we champion creativity through curated projects that embody excellence and bold innovation. Explore our work, showcasing expertise and impactful solutions.
+        At Mio Mideal, we champion creativity to master projects embodying excellence and bold innovation. Explore our work, where we showcase expertise and impactful solutions.
           </p>
           <ProjectsGrid />
         </section>
