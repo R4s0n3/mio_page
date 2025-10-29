@@ -36,14 +36,13 @@ Innovation is our craft. Through creativity and collaboration, we shape ideas in
       <section id="merch" className="container flex flex-col gap-8 px-4 py-8">  
           <h2 className="text-3xl underline underline-offset-8 font-headline font-extrabold text-highlight-magenta sm:text-[3rem]">MERCH</h2>
           <p className="font-text w-full max-w-md">
-          Step into the world of Mio Mideal with our exclusive merch! Designed with the same creativity and boldness that fuels our projects, each piece is a statement of innovation and style. Wear your passion for a better world and let our designs spark conversations wherever you go.
-          </p>
+This isn’t really about merch. It’s about that thin line between creating for love and creating to stay afloat. We put our ideas on fabric and paper, not because that’s where they truly belong, but because it keeps our mission alive.
+Every piece carries a fragment of what we’re building, a quiet exchange between our passion and your support. We know it’s not priceless, and that’s okay. Meaning isn’t about perfection; it’s about people choosing to believe in something real, imperfect, growing.</p>
           <div className="w-full">
           <MerchCarousel />
           </div>
         </section>
       </main>
-
     </HydrateClient>
   );
 }
