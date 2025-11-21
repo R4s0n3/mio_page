@@ -60,7 +60,7 @@ function CreatorsItem(props:CreatorsItemProps){
     </div>
     <div className="flex-1 flex justify-end">
         <div className="size-24 md:size-32 relative">
-    <Image alt="logo" fill src={item.sig ?? "/SVG/logo.svg"} />
+    <Image alt="logo" fill sizes="24rem" src={item.sig ?? "/SVG/logo.svg"} />
         </div>
     </div>
     <div className="basis-full flex gap-4">

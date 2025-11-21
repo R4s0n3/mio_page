@@ -1,31 +1,31 @@
-'use client'
-import { api } from '@/trpc/react';
-import EmblaCarousel from './carousel/carousel'
-import "@/styles/carousel/style.css"
-import LoadingSpinner from './loading-spinner';
+"use client";
+import { api } from "@/trpc/react";
+import EmblaCarousel from "./carousel/carousel";
+import "@/styles/carousel/style.css";
+import LoadingSpinner from "./loading-spinner";
 
-export type ProductItemType = {
-    type: string;
-    description: string | null;
-    id: string;
-    name: string;
-    image: string | null;
-    price: number | null;
-}
+type MerchRaw = {
+  id: string;
+  name: string;
+  price: number | null;
+  image: string | null;
+  description: string | null;
+  type?: { id: string; name: string };
+};
 
-export default function MerchCarousel(){
-    const {data:items, isLoading} = api.product.getMerch.useQuery()
-    
-    if(isLoading) return <LoadingSpinner />
+export default function MerchCarousel() {
+  const { data: items } = api.product.getMerch.useQuery<MerchRaw[]>();
 
-    const madeItems = items?.map(i => ({
-        id: i.id,
-        description: i.description,
-        name: i.name,
-        type: i.type.name,
-        image:i.image,
-        price: i.price
-    })) ?? []
-    
-    return <EmblaCarousel slides={madeItems} options={{}} />
+  if (!items) return null;
+
+  const madeItems = items.map((i) => ({
+    id: i.id,
+    description: i.description,
+    name: i.name,
+    type: i.type?.name ?? "",
+    image: i.image,
+    price: i.price ?? 0,
+  }));
+
+  return <EmblaCarousel slides={madeItems} options={{}} />;
 }

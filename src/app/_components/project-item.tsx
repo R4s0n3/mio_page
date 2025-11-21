@@ -14,7 +14,7 @@ export default function ProjectItem(project:ProjectItemProps ){
         <h3>{project.name}</h3>
         <ArrowTopRightOnSquareIcon className='size-6 z-30 absolute bottom-4 right-4'  />
         <div className='size-14 relative'>
-         <Image className='size-full object-contain'  fill alt={project.name} src={project.image} />
+         <Image className='size-full object-contain' sizes="14rem" fill alt={project.name} src={project.image} />
         </div>
     </div>
 }
