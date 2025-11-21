@@ -7,6 +7,7 @@ export const projectRouter = createTRPCRouter({
         type: "PROJECT",
         status: "PUBLIC",
       },
+      take: 8,
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -15,7 +16,6 @@ export const projectRouter = createTRPCRouter({
         url: true,
       },
     });
-    posts?.length = 8;
     return posts ?? [];
   }),
 });
