@@ -15,7 +15,7 @@ export default async function Home() {
         >
           <div className="flex w-full flex-col items-center justify-center gap-4">
             <Image
-              className="logo-animation"
+              className="logo-animation size-56"
               alt="mio logo"
               width={225}
               height={225}

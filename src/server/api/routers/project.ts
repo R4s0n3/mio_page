@@ -15,7 +15,7 @@ export const projectRouter = createTRPCRouter({
         url: true,
       },
     });
-
+    posts?.length = 8;
     return posts ?? [];
   }),
 });
