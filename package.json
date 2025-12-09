@@ -31,7 +31,7 @@
     "@trpc/server": "^11.0.0-rc.824",
     "embla-carousel": "^8.5.2",
     "embla-carousel-react": "^8.5.2",
-    "next": "^15.2.1",
+    "next": "15.2.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "server-only": "^0.0.1",
