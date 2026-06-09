@@ -1,4 +1,5 @@
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { z } from "zod";
 
 export const productRouter = createTRPCRouter({
   getMerch: publicProcedure.query(async ({ ctx }) => {
@@ -10,4 +11,24 @@ export const productRouter = createTRPCRouter({
     });
     return products ?? [];
   }),
+  getView: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(({ ctx, input }) => {
+      const product = ctx.db.product.findFirst({
+        where: {
+          id: input.id,
+          deletedAt: null,
+        },
+        include: {
+          detailImages: true,
+          type: true,
+        },
+      });
+
+      return product ?? null;
+    }),
 });

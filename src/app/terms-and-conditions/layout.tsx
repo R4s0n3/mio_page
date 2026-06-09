@@ -11,9 +11,5 @@ export const metadata: Metadata = {
 export default function TosLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return (
-        <div>
-          {children}
-        </div>
-  );
+  return <div>{children}</div>;
 }

@@ -1,15 +1,11 @@
-'use client'
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+"use client";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const LoadingSpinner = () => {
   return (
-    <div className='w-full flex justify-center items-center aspect-video'>
-    <DotLottieReact
-      src="/data.json"
-      loop
-      autoplay
-      />
-      </div>
+    <div className="flex aspect-video w-full items-center justify-center">
+      <DotLottieReact src="/data.json" loop autoplay />
+    </div>
   );
 };
-export default LoadingSpinner
+export default LoadingSpinner;
