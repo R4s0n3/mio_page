@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { HydrateClient } from "@/trpc/server";
 import ProjectsGrid from "./_components/projects-grid";
@@ -31,7 +32,7 @@ export default async function Home() {
           className="container flex flex-col gap-8 px-4 py-8"
         >
           <h2 className="font-headline text-3xl font-extrabold text-highlight-cyan underline underline-offset-8 sm:text-[3rem]">
-            PROJECTS
+            LATEST PROJECTS
           </h2>
           <p className="w-full max-w-md font-text">
             At Mio Mideal, we champion creativity to master projects embodying
@@ -40,6 +41,12 @@ export default async function Home() {
             it.
           </p>
           <ProjectsGrid />
+          <Link
+            className="w-fit font-subhead text-xl uppercase text-highlight-cyan underline underline-offset-4 transition duration-300 hover:text-accent"
+            href="/projects"
+          >
+            View all projects
+          </Link>
         </section>
         <section id="about" className="container flex flex-col gap-8 px-4 py-8">
           <h2 className="font-headline text-3xl font-extrabold text-highlight-green underline underline-offset-8 sm:text-[3rem]">

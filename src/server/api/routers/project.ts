@@ -18,4 +18,21 @@ export const projectRouter = createTRPCRouter({
     });
     return posts ?? [];
   }),
+  getAllPublic: publicProcedure.query(async ({ ctx }) => {
+    const posts = await ctx.db.post.findMany({
+      where: {
+        type: "PROJECT",
+        status: "PUBLIC",
+      },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        url: true,
+        content: true,
+      },
+    });
+    return posts ?? [];
+  }),
 });

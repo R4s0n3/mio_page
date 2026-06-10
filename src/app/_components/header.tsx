@@ -5,11 +5,15 @@ import {
 import Link from "next/link";
 import CartIcon from "./cart-icon";
 
-const navLinks = ["projects", "about", "merch"];
+const navLinks = [
+  { label: "projects", href: "/projects" },
+  { label: "about", href: "/#about" },
+  { label: "merch", href: "/#merch" },
+];
 
 export default async function Header() {
-  function createNavLinks(item: string) {
-    return <NavLink key={item} link={item} />;
+  function createNavLinks(item: { label: string; href: string }) {
+    return <NavLink key={item.label} {...item} />;
   }
 
   return (
@@ -32,14 +36,14 @@ export default async function Header() {
   );
 }
 
-function NavLink(props: { link: string }) {
-  const { link } = props;
+function NavLink(props: { label: string; href: string }) {
+  const { label, href } = props;
   return (
     <Link
       className="uppercase transition duration-300 hover:text-accent"
-      href={`./#${link}`}
+      href={href}
     >
-      {link}
+      {label}
     </Link>
   );
 }
