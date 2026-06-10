@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 // Paths
 const standaloneDir = path.join(__dirname, '.next', 'standalone');
 const staticSourceDir = path.join(__dirname, '.next', 'static');
-const staticDestDir = path.join(standaloneDir, '_next', 'static');
+const staticDestDir = path.join(standaloneDir, '.next', 'static');
 const loaderTemplateFile = path.join(__dirname, 'templates', 'loader.mjs');
 const loaderDestFile = path.join(standaloneDir, 'loader.mjs');
 const publicSourceDir = path.join(__dirname, 'public');
@@ -25,14 +25,14 @@ function ensureDir(dir) {
   }
 }
 
-// Ensure the standalone and _next directories exist
+// Ensure the standalone and .next directories exist
 ensureDir(standaloneDir);
-ensureDir(path.join(standaloneDir, '_next'));
+ensureDir(path.join(standaloneDir, '.next'));
 
 // Copy the loader.cjs template file to the standalone directory
 fs.copyFileSync(loaderTemplateFile, loaderDestFile);
 
-// Copy the .next/static directory to .next/standalone/_next
+// Copy the .next/static directory to .next/standalone/.next
 fs.cpSync(staticSourceDir, staticDestDir, { recursive: true });
 
 // Copy the public directory to .next/standalone/public
