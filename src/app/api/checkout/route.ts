@@ -13,7 +13,7 @@ import {
 
 const allowedSizes = new Set(["XS", "S", "M", "L", "XL", "XXL"]);
 
-class CheckoutInputError extends Error {}
+class CheckoutInputError extends Error { }
 
 function toStripeImageUrl(image: string | null | undefined) {
   if (!image) return undefined;
@@ -152,7 +152,6 @@ export async function POST(request: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       client_reference_id: order.cartRef,
-      payment_method_types: ["card", "klarna", "paypal"],
       line_items: lineItems,
       mode: "payment",
       success_url: `${env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
