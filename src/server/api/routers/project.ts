@@ -1,11 +1,11 @@
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 
 export const projectRouter = createTRPCRouter({
-  getLatest: publicProcedure.query(async ({ ctx }) => {
+  getFeatured: publicProcedure.query(async ({ ctx }) => {
     const posts = await ctx.db.post.findMany({
       where: {
         type: "PROJECT",
-        status: "PUBLIC",
+        status: "FEATURED",
       },
       take: 8,
       orderBy: { createdAt: "desc" },
@@ -22,7 +22,7 @@ export const projectRouter = createTRPCRouter({
     const posts = await ctx.db.post.findMany({
       where: {
         type: "PROJECT",
-        status: "PUBLIC",
+        status: { in: ["PUBLIC", "FEATURED"] },
       },
       orderBy: { createdAt: "desc" },
       select: {

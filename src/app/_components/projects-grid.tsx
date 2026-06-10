@@ -4,7 +4,7 @@ import ProjectItem from "./project-item";
 import LoadingSpinner from "./loading-spinner";
 
 export default function ProjectsGrid() {
-  const { data: projects, isLoading } = api.project.getLatest.useQuery();
+  const { data: projects, isLoading } = api.project.getFeatured.useQuery();
 
   function createProjectItem(project: {
     id: number;

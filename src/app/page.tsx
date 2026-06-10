@@ -32,7 +32,7 @@ export default async function Home() {
           className="container flex flex-col gap-8 px-4 py-8"
         >
           <h2 className="font-headline text-3xl font-extrabold text-highlight-cyan underline underline-offset-8 sm:text-[3rem]">
-            LATEST PROJECTS
+            FEATURED PROJECTS
           </h2>
           <p className="w-full max-w-md font-text">
             At Mio Mideal, we champion creativity to master projects embodying
