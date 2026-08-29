@@ -14,7 +14,7 @@ const roboto = Roboto({ subsets: ["latin"], weight: ["400", "900"] });
 
 export const metadata: Metadata = {
   title: "Mio Mideal",
-  description: "Mio Mideal Webspace.",
+  description: "Mio Mideal – Musik, Projekte, Merch und Sponsoren.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
@@ -23,7 +23,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
-      lang="en"
+      lang="de"
       className={`${jersey.className} ${russo.className} ${roboto.className}`}
     >
       <body>

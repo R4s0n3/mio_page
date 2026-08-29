@@ -3,8 +3,8 @@ import "@/styles/globals.css";
 import { type Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Mio Mideal - Privacy Policy",
-  description: "",
+  title: "Datenschutzerklärung | Mio Mideal",
+  description: "Informationen zum Datenschutz bei Mio Mideal.",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

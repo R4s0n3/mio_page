@@ -13,7 +13,7 @@ import {
 
 const allowedSizes = new Set(["XS", "S", "M", "L", "XL", "XXL"]);
 
-class CheckoutInputError extends Error { }
+class CheckoutInputError extends Error {}
 
 function toStripeImageUrl(image: string | null | undefined) {
   if (!image) return undefined;
@@ -172,6 +172,8 @@ export async function POST(request: NextRequest) {
       metadata: {
         orderId: order.id,
         cartRef: order.cartRef,
+        termsAccepted: "true",
+        termsVersion: "2026-08-29",
       },
     });
 

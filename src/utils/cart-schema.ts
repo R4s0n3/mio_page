@@ -26,6 +26,7 @@ export const checkoutCartItemSchema = z.object({
 
 export const checkoutRequestSchema = z.object({
   cartItems: z.array(checkoutCartItemSchema).min(1).max(50),
+  termsAccepted: z.literal(true),
 });
 
 export const checkoutResponseSchema = z.object({

@@ -1,305 +1,225 @@
 import Link from "next/link";
 
+import { LegalDocument, LegalSection } from "@/app/_components/legal-document";
+
 export default function PrivacyPolicy() {
   return (
-    <main className="flex min-h-screen flex-col items-center gap-16 bg-gradient-to-b from-primary-800 to-primary-900 py-20 font-text text-headings">
-      <div className="flex w-full max-w-2xl flex-col gap-6 p-4">
-        <div>
-          <h1 className="font-headline text-6xl">Privacy Policy</h1>
-          <p className="text-xs">Last Updated: 06 Feb. 2025</p>
-        </div>
-
+    <LegalDocument
+      title="Datenschutzerklärung"
+      subtitle="Informationen über die Verarbeitung personenbezogener Daten auf dieser Website."
+      updated="29. August 2026"
+    >
+      <LegalSection title="1. Verantwortlicher">
         <p>
-          Welcome to the Privacy Policy of Mio Mideal (“we,” “us,” or our”).
-          This policy explains how we collect, use, and protect your personal
-          data when you use our website and services. By using our website, you
-          consent to the practices described in this policy.
+          Pascal Schoenen
+          <br />
+          handelnd unter „Mio Mideal“
+          <br />
+          Kaiser-Friedrich-Ring 17
+          <br />
+          66740 Saarlouis
+          <br />
+          Deutschland
         </p>
-        <div>
-          <h2 className="font-subhead text-2xl">1. Data Controller</h2>
-          <ul>
-            <li>Hein & Schoenen GbR</li>
-            <li>Blumenstraße 43, 66111 SB</li>
-            <li>
-              <Link href="mailto:legal@miomideal.com">legal@miomideal.com</Link>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h2 className="font-subhead text-2xl">2. Information We Collect</h2>
-          <ul>
-            <li>
-              Personal Data: We collect personal data that you provide to us,
-              such as:
-              <ul>
-                <li>Name</li>
-                <li>Email address</li>
-                <li>Shipping address</li>
-                <li>Billing address</li>
-                <li>Phone number</li>
-                <li>
-                  Payment information (processed via Stripe; we do not store
-                  card details)
-                </li>
-              </ul>
-            </li>
-            <li className="pt-8">
-              <b>Automatically Collected Data:</b> We automatically collect
-              certain information when you visit our website, including:
-              <ul>
-                <li>IP address</li>
-                <li>Browser type</li>
-                <li>Operating system</li>
-                <li>Referring URLs</li>
-                <li>Pages visited</li>
-                <li>Device information</li>
-              </ul>
-            </li>
-            <li>
-              <b>Cookies and Similar Technologies:</b> We use cookies and
-              similar technologies to collect information about your browsing
-              behavior. See our <Link href="#cookies">Cookies Section</Link> for
-              more details.
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h2 className="font-subhead text-2xl">
-            3. How We Use Your Information
-          </h2>
-          <ul>
-            <li>
-              <b>Order Processing:</b> To process and fulfill your orders,
-              including shipping and payment processing.
-            </li>
-            <li>
-              <b>Customer Support:</b> To provide customer support and respond
-              to your inquiries.
-            </li>
-            <li>
-              <b>Account Management:</b> To manage your user account, if you
-              create one.
-            </li>
-            <li>
-              <b>Marketing Communications:</b> With your consent, to send you
-              promotional emails about new products, special offers, and other
-              updates. You can opt-out at any time.
-            </li>
-            <li>
-              <b>Website Improvement:</b> To analyze website usage and improve
-              our website&apos;s functionality and user experience.
-            </li>
-            <li>
-              Legal Compliance: To comply with legal obligations and protect our
-              rights.
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h2 className="font-subhead text-2xl">
-            4. Legal Basis for Processing
-          </h2>
-          <p>
-            We process your personal data based on the following legal bases:
-          </p>
-          <ul>
-            <li>
-              Contractual Necessity: Processing is necessary to fulfill our
-              contractual obligations to you (e.g., processing your order).
-            </li>
-            <li>
-              Consent: You have given us consent to process your data for
-              specific purposes (e.g., marketing communications).
-            </li>
-            <li>
-              Legitimate Interests: Processing is necessary for our legitimate
-              interests, provided those interests are not overridden by your
-              rights and interests (e.g., website improvement).
-            </li>
-            <li>
-              Legal Obligation: Processing is necessary to comply with legal
-              obligations.
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h2 className="font-subhead text-2xl">5. Data Sharing</h2>
-          <p>
-            We may share your personal data with the following categories of
-            recipients:
-          </p>
-          <ul>
-            <li>
-              Service Providers: Third-party service providers who assist us in
-              providing our services (e.g., Stripe for payment processing,
-              shipping companies for delivery).
-            </li>
-            <li>
-              Legal Authorities: Government authorities or law enforcement
-              agencies if required by law.
-            </li>
-            <li>
-              Business Partners: Trusted business partners who help us improve
-              our services or offer you relevant products and services.
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h2 className="font-subhead text-2xl">6. Data Security</h2>
-          <p>
-            We implement appropriate technical and organizational measures to
-            protect your personal data from unauthorized access, disclosure,
-            alteration, or destruction. These measures include:
-          </p>
-          <ul>
-            <li>Encryption of sensitive data</li>
-            <li>Secure server infrastructure</li>
-            <li>Regular security assessments</li>
-            <li>Employee training on data protection</li>
-          </ul>
-        </div>
-        <div>
-          <h2 className="font-subhead text-2xl">7. Data Retention</h2>
-          <p>
-            We retain your personal data for as long as necessary to fulfill the
-            purposes for which it was collected, or as required by law.
-            Specifically:
-          </p>
-          <ul>
-            <li>
-              Order Data: We retain order data for 8 years for accounting and
-              legal compliance purposes.
-            </li>
-            <li>
-              Account Data: If you have an account, we retain your account data
-              until you close your account.
-            </li>
-            <li>
-              Marketing Data: We retain your marketing preferences until you
-              opt-out.
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h2 className="font-subhead text-2xl">8. Your Rights</h2>
-          <p>
-            Under the GDPR and other applicable laws, you have the following
-            rights regarding your personal data:
-          </p>
-          <ul>
-            <li>
-              Right to Access: You have the right to access the personal data we
-              hold about you.
-            </li>
-            <li>
-              Right to Rectification: You have the right to correct inaccurate
-              or incomplete personal data.
-            </li>
-            <li>
-              Right to Erasure: You have the right to request the deletion of
-              your personal data, subject to certain exceptions.
-            </li>
-            <li>
-              Right to Restriction of Processing: You have the right to restrict
-              the processing of your personal data in certain circumstances.
-            </li>
-            <li>
-              Right to Data Portability: You have the right to receive your
-              personal data in a structured, commonly used, and machine-readable
-              format and to transmit it to another controller.
-            </li>
-            <li>
-              Right to Object: You have the right to object to the processing of
-              your personal data for direct marketing purposes or based on our
-              legitimate interests.
-            </li>
-            <li>
-              Right to Withdraw Consent: If we rely on your consent to process
-              your data, you have the right to withdraw your consent at any
-              time.
-            </li>
-          </ul>
-        </div>
-
-        <h2 className="font-subhead text-2xl" id="cookies">
-          9. Cookies
-        </h2>
         <p>
-          We use cookies and similar technologies to enhance your browsing
-          experience, analyze website traffic, and personalize content.
+          Telefon: <Link href="tel:+4915679815927">+49 1567 9815927</Link>
+          <br />
+          E-Mail:{" "}
+          <Link href="mailto:legal@miomideal.com">legal@miomideal.com</Link>
+        </p>
+      </LegalSection>
+
+      <LegalSection title="2. Bereitstellung der Website und Server-Logdaten">
+        <p>
+          Beim Aufruf der Website verarbeitet der eingesetzte Hosting-Anbieter
+          technisch erforderliche Verbindungsdaten. Dazu können insbesondere
+          IP-Adresse, Datum und Uhrzeit des Zugriffs, aufgerufene Ressource,
+          übertragene Datenmenge, Referrer, Browser, Betriebssystem und
+          HTTP-Status gehören. Die Verarbeitung ist erforderlich, um die Website
+          sicher und fehlerfrei bereitzustellen, Angriffe zu erkennen und
+          technische Störungen zu beheben.
+        </p>
+        <p>
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes
+          Interesse liegt im sicheren und funktionsfähigen Betrieb der Website.
+          Logdaten werden nur so lange gespeichert, wie dies für diese Zwecke
+          erforderlich ist, und anschließend gelöscht, sofern kein
+          sicherheitsrelevanter Vorfall eine längere Aufbewahrung rechtfertigt.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="3. Warenkorb und lokale Speicherung">
+        <p>
+          Der Warenkorb wird im lokalen Speicher Ihres Browsers (Local Storage)
+          abgelegt, damit ausgewählte Artikel zwischen Seitenaufrufen erhalten
+          bleiben. Die Informationen verbleiben grundsätzlich auf Ihrem Gerät
+          und können über die Browser-Einstellungen gelöscht werden.
+        </p>
+        <p>
+          Der Zugriff auf den lokalen Speicher ist für die von Ihnen
+          ausdrücklich gewünschte Warenkorb-Funktion erforderlich (§ 25 Abs. 2
+          Nr. 2 TDDDG). Soweit dabei personenbezogene Daten verarbeitet werden,
+          erfolgt dies zur Durchführung vorvertraglicher Maßnahmen nach Art. 6
+          Abs. 1 lit. b DSGVO. Wir setzen derzeit keine Analyse- oder
+          Marketing-Cookies ein.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="4. Bestellungen im Shop">
+        <p>
+          Wenn Sie eine Bestellung aufgeben, verarbeiten wir die zur
+          Vertragsabwicklung notwendigen Angaben. Hierzu gehören insbesondere
+          bestellte Artikel, Preise, E-Mail-Adresse, Liefer- und
+          Rechnungsanschrift, Zahlungsstatus sowie Bestell- und
+          Transaktionsreferenzen. Zahlungsdaten wie vollständige
+          Kreditkartennummern werden nicht von uns gespeichert.
+        </p>
+        <p>
+          Rechtsgrundlagen sind Art. 6 Abs. 1 lit. b DSGVO für die Anbahnung und
+          Durchführung des Vertrags sowie Art. 6 Abs. 1 lit. c DSGVO für
+          handels- und steuerrechtliche Aufbewahrungspflichten. Vertrags- und
+          Buchungsunterlagen bewahren wir entsprechend den jeweils geltenden
+          gesetzlichen Fristen auf. Andere Bestelldaten werden gelöscht, sobald
+          sie nicht mehr für Vertrag, Gewährleistung oder Rechtsverteidigung
+          benötigt werden.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="5. Sponsor- und Werbeplätze">
+        <p>
+          Für den Erwerb eines Sponsorplatzes verarbeiten wir Firmen- bzw.
+          Markennamen, geschäftliche E-Mail-Adresse, Ziel-URL, hochgeladenes
+          Logo oder GIF, Gebotshöhe, Status sowie Zahlungs- und
+          Transaktionsreferenzen. Nach bestätigter Zahlung werden Logo und
+          verlinkte Zielseite öffentlich auf der Website angezeigt, bis der
+          Platz durch ein höheres Gebot ersetzt wird. Dabei ist auch der
+          Markenname öffentlich erkennbar oder technisch dem Werbemittel
+          zugeordnet.
+        </p>
+        <p>
+          Erfolgreiche Sponsoren erhalten außerdem ein Mio Mystery Care Package.
+          Wir verwenden die im Checkout angegebene geschäftliche E-Mail-Adresse,
+          um nach der Freischaltung einmalig Kontakt aufzunehmen, die
+          Lieferanschrift zu erfragen und den Versand abzustimmen. Diese
+          Kontaktaufnahme ist kein Newsletter. Die anschließend mitgeteilten
+          Empfängerdaten werden ausschließlich zur Abwicklung und zum Versand
+          des Sponsor-Pakets verwendet.
+        </p>
+        <p>
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO. Abgelöste Werbemittel
+          und Kontaktdaten werden gelöscht, sobald sie nicht mehr zur
+          Vertragsabwicklung, Erfüllung gesetzlicher Pflichten oder
+          Rechtsverteidigung erforderlich sind.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="6. Zahlungsabwicklung mit Stripe">
+        <p>
+          Für Zahlungen werden Sie zu Stripe weitergeleitet. Anbieter für den
+          Europäischen Wirtschaftsraum ist grundsätzlich Stripe Payments Europe,
+          Limited, 1 Grand Canal Street Lower, Grand Canal Dock, Dublin, Irland.
+          Stripe verarbeitet die von Ihnen im Checkout eingegebenen Zahlungs-
+          und Kontaktdaten eigenverantwortlich und übermittelt uns
+          Zahlungsstatus sowie Transaktionsreferenzen.
+        </p>
+        <p>
+          Die Übermittlung erfolgt zur Vertragsdurchführung nach Art. 6 Abs. 1
+          lit. b DSGVO und, soweit erforderlich, zur Betrugsprävention auf
+          Grundlage berechtigter Interessen nach Art. 6 Abs. 1 lit. f DSGVO.
+          Stripe kann Daten auch außerhalb des Europäischen Wirtschaftsraums
+          verarbeiten und setzt hierfür nach eigenen Angaben geeignete Garantien
+          ein. Weitere Informationen finden Sie in der{" "}
+          <Link href="https://stripe.com/de/privacy">
+            Datenschutzerklärung von Stripe
+          </Link>
+          .
+        </p>
+      </LegalSection>
+
+      <LegalSection title="7. Versand, E-Mail, Datei- und Infrastruktur-Dienste">
+        <p>
+          Soweit für eine Bestellung oder ein Sponsor Care Package erforderlich,
+          übermitteln wir Empfängerdaten an den beauftragten
+          Versanddienstleister. Für Transaktions- und Abwicklungs-E-Mails nutzen
+          wir einen SMTP- bzw. E-Mail-Dienst. Logos und GIFs für Sponsorplätze
+          werden über unsere Upload- und CDN-Infrastruktur gespeichert und
+          ausgeliefert. Hosting-, E-Mail-, Versand- und Infrastruktur-Anbieter
+          erhalten Daten nur in dem Umfang, der zur jeweiligen Leistung
+          notwendig ist.
+        </p>
+        <p>
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO; für Sicherheit,
+          zuverlässige Zustellung und technischen Betrieb zusätzlich Art. 6 Abs.
+          1 lit. f DSGVO. Mit Auftragsverarbeitern schließen wir, soweit
+          erforderlich, Verträge nach Art. 28 DSGVO. Falls ein Anbieter Daten in
+          einem Drittland verarbeitet, erfolgt dies nur unter den gesetzlichen
+          Voraussetzungen der Art. 44 ff. DSGVO.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="8. Externe Links und Medien">
+        <p>
+          Sponsorlogos und sonstige Medien werden direkt über unsere
+          Infrastruktur bzw. die konfigurierte Medien-Infrastruktur geladen.
+          Links zu Sponsor-Websites und sozialen Netzwerken übertragen Daten an
+          den jeweiligen Anbieter erst, wenn Sie den Link anklicken. Für die
+          anschließende Verarbeitung ist der jeweilige Anbieter verantwortlich.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="9. Pflicht zur Bereitstellung und automatisierte Entscheidungen">
+        <p>
+          Pflichtfelder im Checkout sind für Vertragsschluss und Abwicklung
+          erforderlich. Ohne diese Angaben können wir die gewünschte Leistung
+          nicht erbringen. Mio Mideal trifft keine ausschließlich automatisierte
+          Entscheidung mit rechtlicher oder ähnlich erheblicher Wirkung. Stripe
+          kann im Rahmen der Zahlungs- und Betrugsprüfung eigene automatisierte
+          Verfahren einsetzen; hierzu informiert Stripe in seinen
+          Datenschutzhinweisen.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="10. Ihre Rechte">
+        <p>
+          Unter den gesetzlichen Voraussetzungen haben Sie insbesondere das
+          Recht auf:
         </p>
         <ul>
-          <li>
-            Types of Cookies:
-            <ul>
-              <li>
-                Essential Cookies: Necessary for the website to function
-                properly.
-              </li>
-              <li>
-                Analytics Cookies: Help us understand how visitors use our
-                website.
-              </li>
-              <li>
-                Marketing Cookies: Used to track visitors across websites and
-                display relevant ads.
-              </li>
-            </ul>
-          </li>
-          <li>
-            Managing Cookies: You can manage your cookie preferences through
-            your browser settings. Please note that disabling certain cookies
-            may affect the functionality of our website.
-          </li>
+          <li>Auskunft nach Art. 15 DSGVO,</li>
+          <li>Berichtigung nach Art. 16 DSGVO,</li>
+          <li>Löschung nach Art. 17 DSGVO,</li>
+          <li>Einschränkung der Verarbeitung nach Art. 18 DSGVO,</li>
+          <li>Datenübertragbarkeit nach Art. 20 DSGVO und</li>
+          <li>Widerspruch gegen Verarbeitungen nach Art. 21 DSGVO.</li>
         </ul>
-
-        <h2 className="font-subhead text-2xl">10. Third-Party Links</h2>
         <p>
-          Our website may contain links to third-party websites. We are not
-          responsible for the privacy practices of these websites. We encourage
-          you to review the privacy policies of any third-party sites you visit.
+          Eine erteilte Einwilligung können Sie jederzeit mit Wirkung für die
+          Zukunft widerrufen. Außerdem haben Sie das Recht, sich bei einer
+          Datenschutz-Aufsichtsbehörde zu beschweren.
         </p>
+      </LegalSection>
 
-        <h2 className="font-subhead text-2xl">11. Children&apos;s Privacy</h2>
+      <LegalSection title="11. Zuständige Aufsichtsbehörde">
         <p>
-          Our website is not intended for children under the age of [age]. We do
-          not knowingly collect personal data from children. If you believe we
-          have collected data from a child, please contact us, and we will take
-          steps to delete it.
+          Unabhängiges Datenschutzzentrum Saarland
+          <br />
+          Fritz-Dobisch-Straße 12
+          <br />
+          66111 Saarbrücken
+          <br />
+          <Link href="https://www.datenschutz.saarland.de">
+            www.datenschutz.saarland.de
+          </Link>
         </p>
+      </LegalSection>
 
-        <h2 className="font-subhead text-2xl">
-          12. International Data Transfers
-        </h2>
+      <LegalSection title="12. Änderungen dieser Datenschutzerklärung">
         <p>
-          If we transfer your personal data to countries outside the European
-          Economic Area (EEA), we will ensure that appropriate safeguards are in
-          place to protect your data, such as standard contractual clauses
-          approved by the European Commission.
+          Wir aktualisieren diese Erklärung, wenn sich Funktionen, Dienstleister
+          oder die Rechtslage ändern. Es gilt die auf dieser Seite
+          veröffentlichte Fassung.
         </p>
-
-        <h2 className="font-subhead text-2xl">
-          13. Changes to This Privacy Policy
-        </h2>
-        <p>
-          We may update this Privacy Policy from time to time. We will notify
-          you of any material changes by posting the new policy on our website
-          and updating the &quot;Last Updated&quot; date.
-        </p>
-
-        <h2 className="font-subhead text-2xl">14. Contact Us</h2>
-        <p>
-          If you have any questions or concerns about this Privacy Policy or our
-          data practices, please contact us at:
-        </p>
-        <ul>
-          <li>
-            <Link href="mailto:legal@miomideal.com">legal@miomideal.com</Link>
-          </li>
-          <li>Hein & Schoenen GbR</li>
-          <li>Blumenstraße 43, 66111 SB</li>
-        </ul>
-      </div>
-    </main>
+      </LegalSection>
+    </LegalDocument>
   );
 }

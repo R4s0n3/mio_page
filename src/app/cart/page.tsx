@@ -14,6 +14,7 @@ export default function CartPage() {
   const [cart, setCart] = useState<{ items: CartItem[] }>({ items: [] });
   const [isLoading, setIsLoading] = useState(true);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
     // Simulate loading for better UX
@@ -38,7 +39,7 @@ export default function CartPage() {
   };
 
   const handleCheckout = async () => {
-    if (!cart.items.length) return;
+    if (!cart.items.length || !termsAccepted) return;
 
     setIsCheckingOut(true);
 
@@ -48,7 +49,10 @@ export default function CartPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ cartItems: cart.items }),
+        body: JSON.stringify({
+          cartItems: cart.items,
+          termsAccepted,
+        }),
       });
 
       const payload: unknown = await response.json();
@@ -215,8 +219,8 @@ export default function CartPage() {
                     <span>€{(totalPrice / 100).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-body">
-                    <span>Shipping</span>
-                    <span>Calculated at checkout</span>
+                    <span>Versand</span>
+                    <span>Kostenlos</span>
                   </div>
                   <div className="border-t border-secondary-800/20 pt-2">
                     <div className="flex justify-between font-subhead text-headings">
@@ -226,9 +230,46 @@ export default function CartPage() {
                   </div>
                 </div>
 
+                <label className="mb-4 flex items-start gap-3 text-xs leading-relaxed text-body/70">
+                  <input
+                    checked={termsAccepted}
+                    className="mt-0.5 size-4 shrink-0 accent-accent"
+                    onChange={(event) => setTermsAccepted(event.target.checked)}
+                    required
+                    type="checkbox"
+                  />
+                  <span>
+                    Ich akzeptiere die{" "}
+                    <Link
+                      className="text-accent underline underline-offset-2"
+                      href="/terms-and-conditions"
+                      target="_blank"
+                    >
+                      AGB
+                    </Link>{" "}
+                    und habe die{" "}
+                    <Link
+                      className="text-accent underline underline-offset-2"
+                      href="/privacy-policy"
+                      target="_blank"
+                    >
+                      Datenschutzerklärung
+                    </Link>{" "}
+                    sowie die{" "}
+                    <Link
+                      className="text-accent underline underline-offset-2"
+                      href="/right-of-withdrawal"
+                      target="_blank"
+                    >
+                      Widerrufsbelehrung
+                    </Link>{" "}
+                    zur Kenntnis genommen.
+                  </span>
+                </label>
+
                 <button
                   onClick={handleCheckout}
-                  disabled={isCheckingOut}
+                  disabled={isCheckingOut || !termsAccepted}
                   className="w-full rounded-lg bg-accent px-6 py-3 font-subhead text-primary-900 transition-colors duration-200 hover:bg-accent/80 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isCheckingOut ? (
@@ -237,9 +278,13 @@ export default function CartPage() {
                       Processing...
                     </span>
                   ) : (
-                    "Proceed to Checkout"
+                    "Weiter zum sicheren Checkout"
                   )}
                 </button>
+                <p className="mt-2 text-center text-[11px] leading-relaxed text-body/45">
+                  Die verbindliche, zahlungspflichtige Bestellung schließen Sie
+                  im nächsten Schritt bei Stripe ab.
+                </p>
 
                 <Link
                   href="/#merch"

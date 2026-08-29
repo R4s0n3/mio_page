@@ -3,6 +3,7 @@ import { projectRouter } from "./routers/project";
 import { contactRouter } from "./routers/contact";
 import { productRouter } from "./routers/product";
 import { orderRouter } from "./routers/order";
+import { sponsorRouter } from "./routers/sponsor";
 
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
@@ -17,6 +18,7 @@ export const appRouter = createTRPCRouter({
   contact: contactRouter,
   product: productRouter,
   order: orderRouter,
+  sponsor: sponsorRouter,
 });
 
 // export type definition of API

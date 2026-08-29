@@ -24,6 +24,13 @@ const socialLinks: SocialListItem[] = [
   },
 ];
 
+const legalLinks = [
+  { href: "/legal-notice", label: "Impressum" },
+  { href: "/privacy-policy", label: "Datenschutz" },
+  { href: "/terms-and-conditions", label: "AGB" },
+  { href: "/right-of-withdrawal", label: "Widerruf" },
+];
+
 export default function Footer() {
   return (
     <footer className="flex w-full items-center justify-center gap-8 bg-primary-900 p-8 font-sans text-headings">
@@ -44,17 +51,15 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col gap-4 text-xs uppercase lg:flex-row">
-          {["legal notice", "privacy policy", "terms and conditions"].map(
-            (link) => (
-              <Link
-                className="text-center underline underline-offset-4 transition duration-300 hover:text-accent"
-                key={link}
-                href={`/${link.split(" ").join("-")}`}
-              >
-                {link}
-              </Link>
-            ),
-          )}
+          {legalLinks.map((link) => (
+            <Link
+              className="text-center underline underline-offset-4 transition duration-300 hover:text-accent"
+              key={link.href}
+              href={link.href}
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
         <div>
           <h3 className="gradient-text text-xs">© {year} Mio Mideal</h3>

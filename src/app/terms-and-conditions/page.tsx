@@ -1,194 +1,254 @@
 import Link from "next/link";
 
+import { LegalDocument, LegalSection } from "@/app/_components/legal-document";
+
 export default function TermsAndConditions() {
   return (
-    <main className="flex min-h-screen flex-col items-center gap-16 bg-gradient-to-b from-primary-800 to-primary-900 py-20 font-text text-headings">
-      <div className="flex w-full max-w-2xl flex-col gap-6 p-4">
-        <div>
-          <h1 className="font-headline text-6xl">
-            Terms and Conditions <br /> Mio Mideal Shop
-          </h1>
-          <p className="text-xs">Last Updated: 06 Feb. 2025</p>
-        </div>
-
+    <LegalDocument
+      title="Allgemeine Geschäftsbedingungen"
+      subtitle="Für den Mio-Mideal-Onlineshop und die Buchung von Sponsorplätzen."
+      updated="29. August 2026"
+    >
+      <LegalSection title="1. Anbieter und Geltungsbereich">
+        <p>Diese Allgemeinen Geschäftsbedingungen gelten für Verträge mit:</p>
         <p>
-          Welcome to Mio Mideal Shop (“we,” “us,” or “our”). These Terms and
-          Conditions govern your use of our website and services. By placing an
-          order, you agree to comply with and be bound by these terms.
+          Pascal Schoenen
+          <br />
+          handelnd unter „Mio Mideal“
+          <br />
+          Kaiser-Friedrich-Ring 17
+          <br />
+          66740 Saarlouis
+          <br />
+          Deutschland
+          <br />
+          Telefon: <Link href="tel:+4915679815927">+49 1567 9815927</Link>
+          <br />
+          E-Mail:{" "}
+          <Link href="mailto:legal@miomideal.com">legal@miomideal.com</Link>
         </p>
+        <p>
+          Die Regelungen in Abschnitt A gelten für den Kauf von Waren im
+          Onlineshop. Abschnitt B gilt ergänzend für Sponsor- und Werbeplätze.
+          Individuelle Vereinbarungen haben Vorrang.
+        </p>
+      </LegalSection>
 
-        <div>
-          <h2 className="font-subhead text-2xl">1. General Information</h2>
-          <p>
-            <strong>Applicability:</strong> These terms apply to all orders
-            placed through our website.
-          </p>
-          <p>
-            <strong>Legal Compliance:</strong> Our operations comply with EU
-            consumer protection laws (e.g., Consumer Rights Directive
-            2011/83/EU) and relevant international regulations.
-          </p>
-        </div>
+      <section>
+        <h2 className="font-headline text-3xl text-accent">A. Onlineshop</h2>
+      </section>
 
-        <div>
-          <h2 className="font-subhead text-2xl">2. Orders</h2>
-          <p>
-            <strong>Order Acceptance:</strong> Orders are subject to
-            availability and our discretion. We reserve the right to cancel
-            orders for suspected fraud, errors, or violations of these terms.
-          </p>
-          <p>
-            <strong>Product Descriptions:</strong> We ensure accurate product
-            descriptions. Notify us immediately of any discrepancies.
-          </p>
-        </div>
-        <div>
-          <h2 className="font-subhead text-2xl">3. Pricing & Payment</h2>
-          <p>
-            <strong>Currency:</strong> Prices are listed in Euro (€). Fees
-            (e.g., taxes, shipping) are displayed before checkout.
-          </p>
-          <h3>Stripe Payments:</h3>
-          <p>
-            All payments are processed securely via Stripe. By completing a
-            purchase, you agree to{" "}
-            <Link href="https://stripe.com/en-de/legal/ssa">
-              Stripe&apos;s Terms.
-            </Link>
-          </p>
-          <p>
-            We do not store payment card details. Stripe handles data in
-            compliance with PCI-DSS standards.
-          </p>
-        </div>
+      <LegalSection title="2. Vertragsschluss">
+        <p>
+          Die Darstellung der Produkte ist noch kein verbindliches Angebot,
+          sondern eine Einladung zur Abgabe einer Bestellung. Sie können Artikel
+          in den Warenkorb legen und Eingaben vor Abgabe der Bestellung prüfen
+          und ändern. Im von Stripe bereitgestellten Checkout geben Sie durch
+          Betätigung des eindeutig als zahlungspflichtig gekennzeichneten
+          Abschlussbuttons ein verbindliches Angebot zum Kauf der angezeigten
+          Waren ab.
+        </p>
+        <p>
+          Eine automatisierte Eingangs- oder Zahlungsbestätigung dokumentiert
+          zunächst nur den Eingang der Bestellung. Wir nehmen das Angebot durch
+          eine ausdrückliche Auftrags- oder Versandbestätigung oder durch
+          Versendung der Ware an. Erfolgt innerhalb von fünf Tagen keine
+          Annahme, sind Sie an Ihr Angebot nicht mehr gebunden; bereits
+          eingezogene Beträge werden zurückerstattet.
+        </p>
+      </LegalSection>
 
-        <div>
-          <h2 className="font-subhead text-2xl">4. Shipping</h2>
-          <p>
-            <strong>Delivery Times:</strong> Estimated delivery windows are
-            provided but not guaranteed. Delays due to unforeseen circumstances
-            (e.g., customs) are not our responsibility.
-          </p>
-          <p>
-            <strong>Risk Transfer:</strong> Ownership and risk of products pass
-            to you upon delivery.
-          </p>
-        </div>
-        <div>
-          <h2 className="font-subhead text-2xl">5. Returns & Refunds</h2>
-          <p>
-            <strong>No Returns Policy:</strong>
-          </p>
-          <p>
-            <strong>Final Sale:</strong> All sales are final unless otherwise
-            required by law. We do not accept returns for reasons such as
-            buyer&apos;s remorse, sizing preferences, or minor cosmetic
-            differences.
-          </p>
-          <p>
-            <strong>Exceptions:</strong> Returns are only accepted for defective
-            or damaged goods. Notify us within 3 days of delivery with proof
-            (e.g., photos).
-          </p>
-          <p>
-            <strong>Refunds:</strong> Approved refunds will be processed via the
-            original payment method within 14 days.
-          </p>
-        </div>
+      <LegalSection title="3. Preise und Zahlung">
+        <p>
+          Alle Preise werden in Euro angegeben. Der vor Abgabe der Bestellung im
+          Checkout ausgewiesene Gesamtpreis ist maßgeblich. Zusätzlich
+          anfallende Versandkosten werden vor Abgabe der Bestellung angezeigt;
+          wird dort kein Versandbetrag ausgewiesen, erfolgt die Lieferung
+          versandkostenfrei. Soweit auf der Rechnung die
+          Kleinunternehmerregelung nach § 19 UStG angewendet wird, wird keine
+          Umsatzsteuer gesondert ausgewiesen.
+        </p>
+        <p>
+          Die verfügbaren Zahlungsarten und deren Bedingungen werden im
+          Stripe-Checkout angezeigt. Die Belastung erfolgt entsprechend der dort
+          ausgewählten Zahlungsart. Wir speichern keine vollständigen
+          Zahlungskartendaten.
+        </p>
+      </LegalSection>
 
-        <div>
-          <h2 className="font-subhead text-2xl">
-            6. Right of Cancellation (EU Customers)
-          </h2>
-          <p>
-            Under EU law, you have the right to cancel your order within 14 days
-            of receiving the goods, unless:
-          </p>
-          <ul>
-            <li>
-              The product is custom-made, perishable, or sealed for
-              health/hygiene reasons (e.g., cosmetics).
-            </li>
-            <li>Digital content has been downloaded/streamed.</li>
-          </ul>
-          <p>
-            <strong>To Cancel:</strong>
-          </p>
-          <p>
-            Notify us in writing (email to{" "}
-            <Link href="mailto:legal.miomideal.com">legal@miomideal.com</Link>)
-            within 14 days.
-          </p>
-          <p>
-            Return unused, undamaged goods in original packaging at your expense
-            within 14 days of cancellation.
-          </p>
-          <p>
-            Refunds (excluding return shipping costs) will be issued after we
-            receive the goods.
-          </p>
-        </div>
+      <LegalSection title="4. Lieferung und Eigentumsvorbehalt">
+        <p>
+          Wir liefern an die im Checkout angebotenen Liefergebiete und an die
+          von Ihnen angegebene Lieferanschrift. Verfügbare Versandarten,
+          Versandkosten und gegebenenfalls Lieferzeiten werden im Angebot oder
+          spätestens im Checkout mitgeteilt.
+        </p>
+        <p>
+          Die Ware bleibt bis zur vollständigen Zahlung unser Eigentum. Für
+          Verbraucher geht die Gefahr des zufälligen Untergangs oder der
+          Verschlechterung grundsätzlich erst mit Übergabe der Ware auf sie
+          über.
+        </p>
+      </LegalSection>
 
-        <div>
-          <h2 className="font-subhead text-2xl">7. Liability</h2>
-          <p>
-            <strong>Limitation:</strong> We are not liable for indirect,
-            incidental, or consequential damages (e.g., lost profits) arising
-            from product use.
-          </p>
-          <p>
-            <strong>Statutory Rights:</strong> These terms do not affect your
-            statutory rights under EU or national law.
-          </p>
-        </div>
+      <LegalSection title="5. Widerrufsrecht für Verbraucher">
+        <p>
+          Verbrauchern steht grundsätzlich ein gesetzliches Widerrufsrecht zu.
+          Einzelheiten, Ausnahmen und das Muster-Widerrufsformular finden Sie in
+          unserer <Link href="/right-of-withdrawal">Widerrufsbelehrung</Link>.
+        </p>
+      </LegalSection>
 
-        <div>
-          <h2 className="font-subhead text-2xl">8. Data Protection</h2>
-          <p>
-            We process personal data in compliance with the GDPR. For details,
-            see our <Link href="/privacy-policy">Privacy Policy</Link>.
-          </p>
-        </div>
+      <LegalSection title="6. Mängelrechte">
+        <p>
+          Es gelten die gesetzlichen Mängelhaftungsrechte. Verbraucher werden
+          gebeten, offensichtliche Transportschäden möglichst sofort beim
+          Zusteller zu melden und uns zu informieren. Das Unterlassen einer
+          solchen Meldung schränkt gesetzliche Ansprüche nicht ein.
+        </p>
+      </LegalSection>
 
-        <div>
-          <h2 className="font-subhead text-2xl">9. Dispute Resolution</h2>
-          <p>
-            <strong>Amicable Resolution:</strong> Contact us first at{" "}
-            <Link href="mailto:legal.miomideal.com">legal@miomideal.com</Link>{" "}
-            to resolve issues.
-          </p>
-          <p>
-            <strong>EU ODR Platform:</strong> EU consumers may lodge complaints
-            via the EU Online Dispute Resolution Platform.
-          </p>
-          <p>
-            <strong>Governing Law:</strong> Disputes are governed by the laws of
-            germany, without overriding{" "}
-            <Link href="https://ec.europa.eu/consumers/odr/main/index.cfm?event=main.home.chooseLanguage">
-              EU consumer protections.
-            </Link>
-          </p>
-        </div>
+      <section>
+        <h2 className="font-headline text-3xl text-accent">
+          B. Sponsor- und Werbeplätze
+        </h2>
+      </section>
 
-        <div>
-          <h2 className="font-subhead text-2xl">10. Amendments</h2>
-          <p>
-            We reserve the right to update these terms. Continued use of our
-            services after changes constitutes acceptance.
-          </p>
-        </div>
+      <LegalSection title="7. Nur für Unternehmer">
+        <p>
+          Sponsor- und Werbeplätze richten sich ausschließlich an Unternehmer im
+          Sinne von § 14 BGB, also an natürliche oder juristische Personen oder
+          rechtsfähige Personengesellschaften, die bei Vertragsschluss in
+          Ausübung ihrer gewerblichen oder selbstständigen beruflichen Tätigkeit
+          handeln. Eine Buchung durch Verbraucher ist ausgeschlossen.
+        </p>
+      </LegalSection>
 
-        <div>
-          <h2 className="font-subhead text-2xl">Contact Us</h2>
-          <p>For questions or cancellations:</p>
-          <p>
-            Email:{" "}
-            <Link href="mailto:legal.miomideal.com">legal@miomideal.com</Link>
-          </p>
-          <p>Address: Blumenstraße 43</p>
-          <p>66111 Saarbrücken</p>
-        </div>
-      </div>
-    </main>
+      <LegalSection title="8. Buchung und Outbid-Prinzip">
+        <p>
+          Jeder Werbeplatz weist einen aktuell erforderlichen Preis aus. Ist der
+          Platz bereits belegt, entspricht dieser grundsätzlich dem bisherigen
+          Betrag zuzüglich des für den Platz festgelegten Mindestaufschlags. Der
+          im Checkout angezeigte Betrag ist maßgeblich. Ändert sich der Preis
+          vor Beginn des Zahlungsprozesses, muss der aktualisierte Betrag erneut
+          bestätigt werden.
+        </p>
+        <p>
+          Mit Abschluss des Stripe-Checkouts geben Sie ein verbindliches Angebot
+          für den ausgewählten Werbeplatz ab. Der Vertrag kommt mit unserer
+          Bestätigung bzw. Freischaltung nach erfolgreicher Zahlung zustande.
+          Sollte der Platz wegen einer zeitgleichen Buchung nicht mehr zu den
+          bestätigten Konditionen verfügbar sein, wird der Betrag
+          zurückerstattet.
+        </p>
+        <p>
+          Nach Freischaltung bleibt das Werbemittel grundsätzlich sichtbar, bis
+          ein anderer Unternehmer den Platz wirksam zu einem höheren Preis
+          übernimmt. Es gibt keine garantierte Mindestlaufzeit und keine
+          Erstattung allein deshalb, weil das Werbemittel später überboten und
+          ersetzt wird. Garantierte Impressionen, Klickzahlen, Reichweiten oder
+          Werbeerfolge sind nicht geschuldet.
+        </p>
+        <h3>Mio Mystery Care Package</h3>
+        <p>
+          Mit erfolgreicher Freischaltung erhält jeder Sponsor einmalig ein Mio
+          Mystery Care Package ohne zusätzlichen Produktpreis. Inhalt,
+          Zusammenstellung und Gestaltung des Überraschungspakets bestimmen wir;
+          ein bestimmter Warenwert oder konkrete Einzelstücke sind nicht
+          geschuldet. Ein späteres Überbieten lässt den Anspruch auf dieses
+          Paket unberührt.
+        </p>
+        <p>
+          Zur Versandabwicklung kontaktieren wir den Sponsor einmalig über die
+          beim Checkout angegebene geschäftliche E-Mail-Adresse und fragen eine
+          zustellfähige Lieferanschrift ab. Der Versand setzt voraus, dass uns
+          diese Angaben mitgeteilt werden. Eine reguläre Lieferung innerhalb
+          Deutschlands ist inbegriffen; Lieferungen in andere Länder erfolgen
+          nach vorheriger Abstimmung.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="9. Werbemittel, Rechte und Zulässigkeit">
+        <p>
+          Sie stellen das Werbemittel im angebotenen Dateiformat bereit und
+          geben eine Ziel-URL an. Mit der Freischaltung räumen Sie uns für die
+          Vertragsdauer das einfache, räumlich unbeschränkte Recht ein, Logo,
+          GIF, Markenname und Link auf der Website technisch zu vervielfältigen,
+          öffentlich zugänglich zu machen und in der für den Platz nötigen Größe
+          darzustellen.
+        </p>
+        <p>
+          Sie sichern zu, dass Inhalte und Zielseite rechtmäßig sind, keine
+          Rechte Dritter verletzen und insbesondere keine diskriminierenden,
+          gewaltverherrlichenden, pornografischen, irreführenden oder sonst
+          rechtswidrigen Inhalte enthalten. Wir dürfen Werbemittel bei einem
+          konkreten Rechtsverstoß, einem begründeten Verdacht oder einem
+          erheblichen Sicherheitsrisiko vorübergehend sperren oder entfernen.
+          Soweit Sie den Verstoß zu vertreten haben, besteht kein Anspruch auf
+          Erstattung.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="10. Technische Verfügbarkeit">
+        <p>
+          Wir bemühen uns um eine hohe Verfügbarkeit, schulden jedoch keinen
+          unterbrechungsfreien Betrieb. Vorübergehende Einschränkungen durch
+          Wartung, Sicherheitsmaßnahmen, Störungen bei Infrastruktur-Anbietern
+          oder Ereignisse außerhalb unseres Einflussbereichs begründen keine
+          Ansprüche, soweit die Einschränkung unerheblich ist. Bei einer von uns
+          zu vertretenden erheblichen und länger andauernden Störung bleiben die
+          gesetzlichen Rechte unberührt.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="11. Haftung">
+        <p>
+          Wir haften unbeschränkt bei Vorsatz und grober Fahrlässigkeit, wegen
+          Schäden aus der Verletzung des Lebens, des Körpers oder der
+          Gesundheit, nach dem Produkthaftungsgesetz sowie im Umfang einer
+          ausdrücklich übernommenen Garantie.
+        </p>
+        <p>
+          Bei leicht fahrlässiger Verletzung wesentlicher Vertragspflichten ist
+          die Haftung auf den bei Vertragsschluss vorhersehbaren,
+          vertragstypischen Schaden begrenzt. Wesentliche Vertragspflichten sind
+          solche, deren Erfüllung die ordnungsgemäße Durchführung des Vertrags
+          überhaupt erst ermöglicht und auf deren Einhaltung die andere Partei
+          regelmäßig vertrauen darf. Im Übrigen ist die Haftung für leichte
+          Fahrlässigkeit ausgeschlossen. Zwingende gesetzliche Haftung bleibt
+          unberührt.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="12. Datenschutz">
+        <p>
+          Informationen zur Verarbeitung personenbezogener Daten finden Sie in
+          unserer <Link href="/privacy-policy">Datenschutzerklärung</Link>.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="13. Verbraucherstreitbeilegung">
+        <p>
+          Wir sind nicht bereit und nicht verpflichtet, an
+          Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
+          teilzunehmen.
+        </p>
+      </LegalSection>
+
+      <LegalSection title="14. Schlussbestimmungen">
+        <p>
+          Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts. Gegenüber
+          Verbrauchern gilt diese Rechtswahl nur, soweit dadurch nicht der
+          Schutz zwingender Bestimmungen des Staates ihres gewöhnlichen
+          Aufenthalts entzogen wird.
+        </p>
+        <p>
+          Ist der Vertragspartner Kaufmann, juristische Person des öffentlichen
+          Rechts oder öffentlich-rechtliches Sondervermögen, ist Saarbrücken
+          Gerichtsstand, soweit gesetzlich zulässig. Gesetzliche ausschließliche
+          Gerichtsstände bleiben unberührt.
+        </p>
+      </LegalSection>
+    </LegalDocument>
   );
 }

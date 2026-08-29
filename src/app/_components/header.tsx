@@ -7,6 +7,7 @@ import CartIcon from "./cart-icon";
 
 const navLinks = [
   { label: "projects", href: "/projects" },
+  { label: "sponsor", href: "/#sponsors" },
   { label: "about", href: "/#about" },
   { label: "merch", href: "/#merch" },
 ];
