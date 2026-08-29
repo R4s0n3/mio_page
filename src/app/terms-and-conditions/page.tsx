@@ -72,7 +72,10 @@ export default function TermsAndConditions() {
           Die verfügbaren Zahlungsarten und deren Bedingungen werden im
           Stripe-Checkout angezeigt. Die Belastung erfolgt entsprechend der dort
           ausgewählten Zahlungsart. Wir speichern keine vollständigen
-          Zahlungskartendaten.
+          Zahlungskartendaten. Nach erfolgreicher Zahlung wird über Stripe eine
+          fortlaufend nummerierte Rechnung bereitgestellt. Die Rechnung enthält
+          den Hinweis auf die Steuerbefreiung für Kleinunternehmer gemäß § 19
+          UStG und weist keine Umsatzsteuer aus.
         </p>
       </LegalSection>
 

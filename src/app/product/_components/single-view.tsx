@@ -111,18 +111,6 @@ export default function SingleView({ pid }: { pid?: string }) {
             </div>
           )}
 
-          {/* Product Specifications */}
-          <div className="grid grid-cols-2 gap-4 rounded-lg border border-secondary-800/20 bg-surface-100 p-4">
-            <div className="flex flex-col gap-1">
-              <span className="font-subhead text-xs text-headings/60">
-                Availability
-              </span>
-              <span className="font-subhead text-highlight-green">
-                In Stock
-              </span>
-            </div>
-          </div>
-
           {/* Size Selector */}
           {hasSizes && type.shippable && (
             <div className="space-y-3">
@@ -193,9 +181,6 @@ export default function SingleView({ pid }: { pid?: string }) {
                 "🛒 Add to Cart"
               )}
             </button>
-            <button className="rounded-lg border border-secondary-800/20 bg-surface px-6 py-4 font-subhead text-headings transition-all duration-200 hover:scale-105 hover:bg-surface-100 active:scale-95">
-              ❤️ Save for Later
-            </button>
           </div>
 
           {/* Trust Badges */}
@@ -203,14 +188,6 @@ export default function SingleView({ pid }: { pid?: string }) {
             <div className="flex items-center gap-2 text-xs text-body/60">
               <span className="text-highlight-green">✓</span>
               <span>Secure Payment</span>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-body/60">
-              <span className="text-highlight-green">✓</span>
-              <span>Fast Delivery</span>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-body/60">
-              <span className="text-highlight-green">✓</span>
-              <span>Quality Guaranteed</span>
             </div>
           </div>
         </div>

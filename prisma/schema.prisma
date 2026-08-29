@@ -66,6 +66,12 @@ model Order {
   id                      String         @id @default(cuid())
   userId                  String?
   shopId                  String?
+  stripeCustomerId        String?
+  stripeInvoiceId         String?        @unique
+  invoiceNumber           String?
+  invoiceUrl              String?        @db.Text
+  invoicePdfUrl           String?        @db.Text
+  paidAt                  DateTime?
   status                  OrderStatus    @default(CART)
   shipping                Shipping?
   user                    User?          @relation(fields: [userId], references: [id])
@@ -91,6 +97,8 @@ model Shipping {
   number   String
   optional String?
   zip      String
+  city     String?
+  state    String?
   country  String
   phone    String?
   email    String
@@ -227,7 +235,16 @@ model SponsorBid {
   status                SponsorBidStatus @default(PENDING)
   stripeSessionId       String?          @unique
   stripePaymentIntentId String?          @unique
+  stripeCustomerId      String?
+  stripeInvoiceId       String?          @unique
+  stripeRefundId        String?          @unique
+  stripeCreditNoteId    String?          @unique
+  invoiceNumber         String?
+  invoiceUrl            String?          @db.Text
+  invoicePdfUrl         String?          @db.Text
   paidAt                DateTime?
+  activatedAt           DateTime?
+  refundedAt            DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

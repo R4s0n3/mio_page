@@ -74,6 +74,18 @@ export default function SuccessView({ validation }: SuccessViewProps) {
                 Payment reference: {validation.paymentReference.slice(0, 8)}...
               </p>
             )}
+            {validation.status === "paid" && validation.invoiceUrl && (
+              <a
+                className="mt-5 inline-flex rounded-lg border border-accent/40 px-5 py-2.5 font-subhead text-accent transition hover:bg-accent/10"
+                href={validation.invoiceUrl}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Rechnung
+                {validation.invoiceNumber ? ` ${validation.invoiceNumber}` : ""}{" "}
+                öffnen
+              </a>
+            )}
           </div>
 
           <div className="flex flex-col justify-center gap-4 sm:flex-row">

@@ -5,6 +5,9 @@ export type CheckoutValidationResult =
       paymentReference: string;
       customerEmail?: string | null;
       emailSent: boolean;
+      invoiceNumber?: string;
+      invoiceUrl?: string;
+      invoicePdfUrl?: string;
       message: string;
     }
   | {

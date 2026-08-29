@@ -3,15 +3,29 @@ import "server-only";
 import type Stripe from "stripe";
 
 import { db } from "@/server/db";
+import {
+  getStripeInvoiceSummary,
+  stripeObjectId,
+  type StripeInvoiceSummary,
+} from "@/server/stripe-invoice";
 import { stripe } from "@/server/stripe";
 
 export type SponsorCheckoutResult = {
-  status: "active" | "outbid" | "pending" | "cancelled" | "invalid";
+  status:
+    | "active"
+    | "outbid"
+    | "refunded"
+    | "pending"
+    | "cancelled"
+    | "invalid";
   message: string;
   advertiserName?: string;
   slotName?: string;
   amount?: number;
   paymentReference?: string;
+  invoiceNumber?: string;
+  invoiceUrl?: string;
+  invoicePdfUrl?: string;
 };
 
 function invalid(
@@ -21,11 +35,128 @@ function invalid(
   return { status: "invalid", message, paymentReference };
 }
 
-function getPaymentIntentId(session: Stripe.Checkout.Session) {
-  if (!session.payment_intent) return undefined;
-  return typeof session.payment_intent === "string"
-    ? session.payment_intent
-    : session.payment_intent.id;
+function invoiceResult(invoice: StripeInvoiceSummary | undefined) {
+  return {
+    invoiceNumber: invoice?.number,
+    invoiceUrl: invoice?.hostedUrl,
+    invoicePdfUrl: invoice?.pdfUrl,
+  };
+}
+
+async function createSponsorCreditNote({
+  bidId,
+  amount,
+  invoiceId,
+  refundId,
+}: {
+  bidId: string;
+  amount: number;
+  invoiceId: string;
+  refundId?: string;
+}) {
+  return stripe.creditNotes.create(
+    {
+      invoice: invoiceId,
+      amount,
+      email_type: "credit_note",
+      memo: "Automatische Erstattung: Sponsorplatz war bei Zahlungsbestätigung nicht mehr verfügbar.",
+      metadata: {
+        checkoutType: "sponsor",
+        sponsorBidId: bidId,
+      },
+      reason: "order_change",
+      ...(refundId
+        ? {
+            refunds: [{ refund: refundId, amount_refunded: amount }],
+          }
+        : { refund_amount: amount }),
+    },
+    { idempotencyKey: `sponsor-credit-${bidId}` },
+  );
+}
+
+async function refundUnactivatedSponsorBid({
+  bidId,
+  amount,
+  paymentIntentId,
+  invoice,
+  existingRefundId,
+  existingCreditNoteId,
+}: {
+  bidId: string;
+  amount: number;
+  paymentIntentId?: string;
+  invoice?: StripeInvoiceSummary;
+  existingRefundId?: string | null;
+  existingCreditNoteId?: string | null;
+}) {
+  let refundId = existingRefundId ?? undefined;
+  let creditNoteId = existingCreditNoteId ?? undefined;
+
+  if (!creditNoteId && invoice) {
+    try {
+      const creditNote = await createSponsorCreditNote({
+        bidId,
+        amount,
+        invoiceId: invoice.id,
+        refundId,
+      });
+      creditNoteId = creditNote.id;
+      refundId ??= stripeObjectId(
+        creditNote.refunds.find((entry) => entry.type === "refund")?.refund,
+      );
+    } catch (creditNoteError) {
+      console.error("Sponsor credit note creation failed:", creditNoteError);
+    }
+  }
+
+  if (!refundId) {
+    if (!paymentIntentId) {
+      throw new Error(
+        "The unavailable sponsor payment could not be refunded automatically.",
+      );
+    }
+
+    const refund = await stripe.refunds.create(
+      {
+        payment_intent: paymentIntentId,
+        metadata: {
+          checkoutType: "sponsor",
+          sponsorBidId: bidId,
+          reason: "placement_unavailable",
+        },
+      },
+      { idempotencyKey: `sponsor-refund-${bidId}` },
+    );
+    refundId = refund.id;
+
+    if (!creditNoteId && invoice) {
+      try {
+        const creditNote = await createSponsorCreditNote({
+          bidId,
+          amount,
+          invoiceId: invoice.id,
+          refundId,
+        });
+        creditNoteId = creditNote.id;
+      } catch (creditNoteError) {
+        console.error(
+          "Sponsor refund credit note linking failed:",
+          creditNoteError,
+        );
+      }
+    }
+  }
+
+  await db.sponsorBid.update({
+    where: { id: bidId },
+    data: {
+      status: "REFUNDED",
+      stripeRefundId: refundId,
+      stripeCreditNoteId: creditNoteId,
+      refundedAt: new Date(),
+    },
+  });
 }
 
 export async function finalizeSponsorCheckout(
@@ -79,17 +210,77 @@ export async function finalizeSponsorCheckout(
     };
   }
 
-  if (["OUTBID", "REMOVED", "REFUNDED"].includes(bid.status)) {
+  const invoice = await getStripeInvoiceSummary(session.invoice);
+  const paymentIntentId = stripeObjectId(session.payment_intent);
+  const paidAt = bid.paidAt ?? new Date();
+
+  await db.sponsorBid.update({
+    where: { id: bid.id },
+    data: {
+      paidAt,
+      stripePaymentIntentId: paymentIntentId,
+      stripeCustomerId: stripeObjectId(session.customer),
+      stripeInvoiceId: invoice?.id,
+      invoiceNumber: invoice?.number,
+      invoiceUrl: invoice?.hostedUrl,
+      invoicePdfUrl: invoice?.pdfUrl,
+    },
+  });
+
+  if (bid.status === "REFUNDED") {
+    await refundUnactivatedSponsorBid({
+      bidId: bid.id,
+      amount: bid.amount,
+      paymentIntentId,
+      invoice,
+      existingRefundId: bid.stripeRefundId,
+      existingCreditNoteId: bid.stripeCreditNoteId,
+    });
     return {
-      status: "outbid",
+      status: "refunded",
       message:
-        bid.status === "OUTBID"
-          ? "Payment succeeded, but a higher sponsor bid is already live."
-          : "Payment succeeded, but this placement is no longer active.",
+        "Payment succeeded, but the placement was no longer available. Stripe refunded the payment.",
       advertiserName: bid.advertiserName,
       slotName: bid.slot.name,
       amount: bid.amount,
       paymentReference: session.id,
+      ...invoiceResult(invoice),
+    };
+  }
+
+  if (bid.status === "OUTBID" && !bid.activatedAt) {
+    await refundUnactivatedSponsorBid({
+      bidId: bid.id,
+      amount: bid.amount,
+      paymentIntentId,
+      invoice,
+      existingRefundId: bid.stripeRefundId,
+      existingCreditNoteId: bid.stripeCreditNoteId,
+    });
+    return {
+      status: "refunded",
+      message:
+        "Payment succeeded, but the placement was no longer available. Stripe refunded the payment.",
+      advertiserName: bid.advertiserName,
+      slotName: bid.slot.name,
+      amount: bid.amount,
+      paymentReference: session.id,
+      ...invoiceResult(invoice),
+    };
+  }
+
+  if (["OUTBID", "REMOVED"].includes(bid.status)) {
+    return {
+      status: "outbid",
+      message:
+        bid.status === "OUTBID"
+          ? "This sponsor was live and has since been outbid."
+          : "This sponsor placement is no longer active.",
+      advertiserName: bid.advertiserName,
+      slotName: bid.slot.name,
+      amount: bid.amount,
+      paymentReference: session.id,
+      ...invoiceResult(invoice),
     };
   }
 
@@ -105,9 +296,6 @@ export async function finalizeSponsorCheckout(
       data: { currentBidId: bid.id },
     });
 
-    const paidAt = bid.paidAt ?? new Date();
-    const paymentIntentId = getPaymentIntentId(session);
-
     if (promoted.count > 0) {
       await tx.sponsorBid.updateMany({
         where: {
@@ -121,8 +309,7 @@ export async function finalizeSponsorCheckout(
         where: { id: bid.id },
         data: {
           status: "ACTIVE",
-          paidAt,
-          stripePaymentIntentId: paymentIntentId,
+          activatedAt: bid.activatedAt ?? paidAt,
         },
       });
       return "active" as const;
@@ -138,24 +325,58 @@ export async function finalizeSponsorCheckout(
       where: { id: bid.id },
       data: {
         status: isAlreadyActive ? "ACTIVE" : "OUTBID",
-        paidAt,
-        stripePaymentIntentId: paymentIntentId,
+        activatedAt: isAlreadyActive
+          ? (bid.activatedAt ?? paidAt)
+          : bid.activatedAt,
       },
     });
 
     return isAlreadyActive ? ("active" as const) : ("outbid" as const);
   });
 
+  if (result === "outbid") {
+    const refreshedBid = await db.sponsorBid.findUnique({
+      where: { id: bid.id },
+      select: {
+        activatedAt: true,
+        stripeRefundId: true,
+        stripeCreditNoteId: true,
+      },
+    });
+
+    if (!refreshedBid?.activatedAt) {
+      await refundUnactivatedSponsorBid({
+        bidId: bid.id,
+        amount: bid.amount,
+        paymentIntentId,
+        invoice,
+        existingRefundId: refreshedBid?.stripeRefundId,
+        existingCreditNoteId: refreshedBid?.stripeCreditNoteId,
+      });
+      return {
+        status: "refunded",
+        message:
+          "Payment succeeded, but a competing checkout claimed this placement first. Stripe refunded the payment.",
+        advertiserName: bid.advertiserName,
+        slotName: bid.slot.name,
+        amount: bid.amount,
+        paymentReference: session.id,
+        ...invoiceResult(invoice),
+      };
+    }
+  }
+
   return {
     status: result,
     message:
       result === "active"
         ? "Your logo is live. It stays here until somebody places a higher bid."
-        : "Payment succeeded, but a higher sponsor bid is already live.",
+        : "This sponsor was live and has since been outbid.",
     advertiserName: bid.advertiserName,
     slotName: bid.slot.name,
     amount: bid.amount,
     paymentReference: session.id,
+    ...invoiceResult(invoice),
   };
 }
 
@@ -167,7 +388,9 @@ export async function validateSponsorCheckout(
   }
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ["invoice"],
+    });
     return await finalizeSponsorCheckout(session);
   } catch (error) {
     console.error("Sponsor checkout validation failed:", error);

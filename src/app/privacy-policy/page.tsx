@@ -69,10 +69,13 @@ export default function PrivacyPolicy() {
         <p>
           Wenn Sie eine Bestellung aufgeben, verarbeiten wir die zur
           Vertragsabwicklung notwendigen Angaben. Hierzu gehören insbesondere
-          bestellte Artikel, Preise, E-Mail-Adresse, Liefer- und
-          Rechnungsanschrift, Zahlungsstatus sowie Bestell- und
-          Transaktionsreferenzen. Zahlungsdaten wie vollständige
-          Kreditkartennummern werden nicht von uns gespeichert.
+          bestellte Artikel, Preise, Name, E-Mail-Adresse, Telefonnummer,
+          Liefer- und Rechnungsanschrift, Zahlungsstatus sowie Bestell-,
+          Rechnungs- und Transaktionsreferenzen. Die bei Stripe erfasste
+          Lieferanschrift wird nach bestätigter Zahlung in unserem Bestellsystem
+          gespeichert und im geschützten Mio Panel zur Versandabwicklung
+          angezeigt. Zahlungsdaten wie vollständige Kreditkartennummern werden
+          nicht von uns gespeichert.
         </p>
         <p>
           Rechtsgrundlagen sind Art. 6 Abs. 1 lit. b DSGVO für die Anbahnung und
@@ -120,7 +123,11 @@ export default function PrivacyPolicy() {
           Limited, 1 Grand Canal Street Lower, Grand Canal Dock, Dublin, Irland.
           Stripe verarbeitet die von Ihnen im Checkout eingegebenen Zahlungs-
           und Kontaktdaten eigenverantwortlich und übermittelt uns
-          Zahlungsstatus sowie Transaktionsreferenzen.
+          Zahlungsstatus sowie Kunden-, Rechnungs- und Transaktionsreferenzen.
+          Für abgeschlossene Zahlungen erstellt Stripe in unserem Auftrag eine
+          Rechnung und stellt einen gehosteten Rechnungslink sowie eine
+          PDF-Fassung bereit. Diese Referenzen werden der jeweiligen Bestellung
+          oder Sponsorbuchung zugeordnet.
         </p>
         <p>
           Die Übermittlung erfolgt zur Vertragsdurchführung nach Art. 6 Abs. 1

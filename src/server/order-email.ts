@@ -19,6 +19,9 @@ type SendOrderConfirmationEmailInput = {
   paidAmount: number;
   currency: string;
   items: OrderEmailItem[];
+  invoiceNumber?: string;
+  invoiceUrl?: string;
+  invoicePdfUrl?: string;
   receiptUrl?: string;
 };
 
@@ -85,6 +88,9 @@ export async function sendOrderConfirmationEmail({
   paidAmount,
   currency,
   items,
+  invoiceNumber,
+  invoiceUrl,
+  invoicePdfUrl,
   receiptUrl,
 }: SendOrderConfirmationEmailInput): Promise<SendOrderConfirmationEmailResult> {
   const smtpHost = env.SMTP_HOST;
@@ -120,6 +126,18 @@ export async function sendOrderConfirmationEmail({
   const subject = `Mio Mideal order confirmation ${orderId.slice(0, 8)}`;
   const total = formatMoney(paidAmount, currency);
   const paymentReferenceText = paymentReference.slice(0, 12);
+  const invoiceLinkHtml = invoiceUrl
+    ? `<p><a href="${escapeHtml(invoiceUrl)}">Open invoice${invoiceNumber ? ` ${escapeHtml(invoiceNumber)}` : ""}</a></p>`
+    : "";
+  const invoicePdfLinkHtml = invoicePdfUrl
+    ? `<p><a href="${escapeHtml(invoicePdfUrl)}">Download invoice PDF</a></p>`
+    : "";
+  const invoiceLinkText = invoiceUrl
+    ? `\nInvoice${invoiceNumber ? ` ${invoiceNumber}` : ""}: ${invoiceUrl}`
+    : "";
+  const invoicePdfLinkText = invoicePdfUrl
+    ? `\nInvoice PDF: ${invoicePdfUrl}`
+    : "";
   const receiptLinkHtml = receiptUrl
     ? `<p><a href="${escapeHtml(receiptUrl)}">Open Stripe receipt</a></p>`
     : "";
@@ -132,7 +150,7 @@ export async function sendOrderConfirmationEmail({
       <p><strong>Order:</strong> ${escapeHtml(orderId.slice(0, 8))}</p>
       <p><strong>Payment reference:</strong> ${escapeHtml(paymentReferenceText)}</p>
 
-      <h2 style="font-size: 18px; margin-top: 24px;">Payment bill</h2>
+      <h2 style="font-size: 18px; margin-top: 24px;">Order summary</h2>
       <table style="width: 100%; border-collapse: collapse;">
         <thead>
           <tr>
@@ -152,6 +170,8 @@ export async function sendOrderConfirmationEmail({
         </a>
       </p>
       <p style="font-size: 12px; color: #6b7280;">This private status link is encrypted and expires after 30 days.</p>
+      ${invoiceLinkHtml}
+      ${invoicePdfLinkHtml}
       ${receiptLinkHtml}
     </div>
   `;
@@ -163,13 +183,13 @@ Thank you for your order. Stripe confirmed your payment and your order is now pr
 Order: ${orderId.slice(0, 8)}
 Payment reference: ${paymentReferenceText}
 
-Payment bill
+Order summary
 ${renderTextBill(items, currency)}
 
 Total paid: ${total}
 
 Check order status: ${statusUrl}
-This private status link is encrypted and expires after 30 days.${receiptLinkText}
+This private status link is encrypted and expires after 30 days.${invoiceLinkText}${invoicePdfLinkText}${receiptLinkText}
 `;
 
   const transporter = nodemailer.createTransport({

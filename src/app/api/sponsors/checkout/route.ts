@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
+import { KLEINUNTERNEHMER_INVOICE_FOOTER } from "@/server/stripe-invoice";
 import { stripe } from "@/server/stripe";
 import { uploadSponsorLogo } from "@/server/sponsor-upload";
 
@@ -96,8 +97,22 @@ export async function POST(request: NextRequest) {
     pendingBidId = bid.id;
 
     const session = await stripe.checkout.sessions.create({
+      billing_address_collection: "required",
       client_reference_id: `sponsor_${bid.id}`,
+      customer_creation: "always",
       customer_email: bid.advertiserEmail,
+      invoice_creation: {
+        enabled: true,
+        invoice_data: {
+          description: `Mio Mideal Sponsorplatz · ${slot.name}`,
+          footer: KLEINUNTERNEHMER_INVOICE_FOOTER,
+          metadata: {
+            checkoutType: "sponsor",
+            sponsorBidId: bid.id,
+            sponsorSlotId: slot.id,
+          },
+        },
+      },
       line_items: [
         {
           price_data: {
@@ -112,7 +127,19 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
+      locale: "de",
       mode: "payment",
+      name_collection: {
+        business: { enabled: true, optional: false },
+        individual: { enabled: true, optional: true },
+      },
+      payment_intent_data: {
+        metadata: {
+          checkoutType: "sponsor",
+          sponsorBidId: bid.id,
+          sponsorSlotId: slot.id,
+        },
+      },
       success_url: `${env.NEXT_PUBLIC_BASE_URL}/sponsors/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/#sponsors`,
       expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
@@ -125,6 +152,7 @@ export async function POST(request: NextRequest) {
         termsVersion: "2026-08-29",
         outbidConfirmation: "true",
       },
+      tax_id_collection: { enabled: true },
     });
 
     if (!session.url) {

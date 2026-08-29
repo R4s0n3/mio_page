@@ -5,6 +5,7 @@ import type Stripe from "stripe";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
+import { KLEINUNTERNEHMER_INVOICE_FOOTER } from "@/server/stripe-invoice";
 import { stripe } from "@/server/stripe";
 import {
   checkoutRequestSchema,
@@ -150,25 +151,57 @@ export async function POST(request: NextRequest) {
         };
       });
 
+    const requiresShipping = orderItems.some(
+      ({ product }) => product.type.shippable,
+    );
+
     const session = await stripe.checkout.sessions.create({
+      billing_address_collection: "required",
       client_reference_id: order.cartRef,
+      customer_creation: "always",
+      invoice_creation: {
+        enabled: true,
+        invoice_data: {
+          description: `Mio Mideal Bestellung ${order.id.slice(0, 8)}`,
+          footer: KLEINUNTERNEHMER_INVOICE_FOOTER,
+          metadata: {
+            checkoutType: "shop",
+            orderId: order.id,
+            cartRef: order.cartRef,
+          },
+        },
+      },
       line_items: lineItems,
+      locale: "de",
       mode: "payment",
+      name_collection: {
+        individual: { enabled: true, optional: false },
+      },
+      payment_intent_data: {
+        metadata: {
+          checkoutType: "shop",
+          orderId: order.id,
+          cartRef: order.cartRef,
+        },
+      },
+      phone_number_collection: { enabled: requiresShipping },
       success_url: `${env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/cart`,
-      shipping_address_collection: {
-        allowed_countries: [
-          "DE",
-          "AT",
-          "CH",
-          "NL",
-          "BE",
-          "FR",
-          "IT",
-          "ES",
-          "PT",
-        ],
-      },
+      shipping_address_collection: requiresShipping
+        ? {
+            allowed_countries: [
+              "DE",
+              "AT",
+              "CH",
+              "NL",
+              "BE",
+              "FR",
+              "IT",
+              "ES",
+              "PT",
+            ],
+          }
+        : undefined,
       metadata: {
         orderId: order.id,
         cartRef: order.cartRef,

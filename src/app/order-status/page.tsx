@@ -114,6 +114,17 @@ export default async function OrderStatusPage({
             {formatMoney(total)}
           </span>
         </div>
+        {order.invoiceUrl && (
+          <a
+            className="mt-6 inline-flex rounded-lg border border-accent/40 px-5 py-2.5 font-subhead text-accent transition hover:bg-accent/10"
+            href={order.invoiceUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Rechnung{order.invoiceNumber ? ` ${order.invoiceNumber}` : ""}{" "}
+            öffnen
+          </a>
+        )}
       </section>
     </main>
   );

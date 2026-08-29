@@ -53,6 +53,17 @@ export default async function SponsorSuccessPage({
             </span>
           </div>
         )}
+        {result.invoiceUrl && (
+          <a
+            className="mt-5 inline-flex rounded-lg border border-highlight-cyan/35 px-5 py-2.5 font-subhead text-highlight-cyan transition hover:bg-highlight-cyan/10"
+            href={result.invoiceUrl}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Rechnung{result.invoiceNumber ? ` ${result.invoiceNumber}` : ""}{" "}
+            öffnen
+          </a>
+        )}
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <Link
             className="rounded-lg bg-highlight-cyan px-6 py-3 font-subhead text-primary-900 transition hover:bg-highlight-green"

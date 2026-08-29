@@ -1,10 +1,15 @@
 import "server-only";
 
+import type Stripe from "stripe";
+
 import { db } from "@/server/db";
 import { sendOrderConfirmationEmail } from "@/server/order-email";
+import {
+  getStripeInvoiceSummary,
+  stripeObjectId,
+} from "@/server/stripe-invoice";
 import { stripe } from "@/server/stripe";
 import type { CheckoutValidationResult } from "@/utils/checkout-validation";
-import type Stripe from "stripe";
 
 const checkoutCurrency = "eur";
 
@@ -29,6 +34,38 @@ function getStripeReceiptUrl(session: Stripe.Checkout.Session) {
   return latestCharge.receipt_url ?? undefined;
 }
 
+function getShippingData(
+  session: Stripe.Checkout.Session,
+  customerEmail: string,
+) {
+  const shipping = session.collected_information?.shipping_details;
+  const address = shipping?.address;
+
+  if (
+    !shipping?.name ||
+    !address?.line1 ||
+    !address.postal_code ||
+    !address.country
+  ) {
+    return undefined;
+  }
+
+  return {
+    name: shipping.name,
+    lastName: "",
+    street: address.line1,
+    number: "",
+    optional: address.line2,
+    zip: address.postal_code,
+    city: address.city,
+    state: address.state,
+    country: address.country,
+    phone: session.customer_details?.phone,
+    email: customerEmail,
+    cost: session.shipping_cost?.amount_total ?? 0,
+  };
+}
+
 export async function validateCheckoutSession(
   sessionId: string,
 ): Promise<CheckoutValidationResult> {
@@ -40,12 +77,12 @@ export async function validateCheckoutSession(
 
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ["payment_intent.latest_charge"],
+      expand: ["invoice", "payment_intent.latest_charge"],
     });
     const orderId = session.metadata?.orderId;
 
-    if (!orderId) {
-      return invalidResult("This checkout session is missing order metadata.", {
+    if (session.metadata?.checkoutType !== "shop" || !orderId) {
+      return invalidResult("This is not a valid shop checkout session.", {
         paymentReference: session.id,
       });
     }
@@ -99,55 +136,94 @@ export async function validateCheckoutSession(
         session.customer_email ??
         order.customerEmail;
 
+      if (!customerEmail) {
+        return invalidResult(
+          "Stripe confirmed payment, but no customer email was available.",
+          { orderId: order.id, paymentReference: session.id },
+        );
+      }
+
+      const invoice = await getStripeInvoiceSummary(session.invoice);
+      const shippingData = getShippingData(session, customerEmail);
+
       await db.order.update({
         where: { id: order.id },
         data: {
           status: "PROCESSING",
           customerEmail,
+          paidAt: order.paidAt ?? new Date(),
+          stripeCustomerId: stripeObjectId(session.customer),
+          stripeInvoiceId: invoice?.id,
+          invoiceNumber: invoice?.number,
+          invoiceUrl: invoice?.hostedUrl,
+          invoicePdfUrl: invoice?.pdfUrl,
+          shipping: shippingData
+            ? {
+                upsert: {
+                  create: shippingData,
+                  update: shippingData,
+                },
+              }
+            : undefined,
         },
       });
 
-      let emailMessage: string | undefined;
-      let emailSent = false;
+      let emailMessage: string;
+      let emailSent = Boolean(order.confirmationEmailSentAt);
 
-      if (!customerEmail) {
-        emailMessage =
-          "No customer email was available from Stripe, so no confirmation email was sent.";
-      } else if (order.confirmationEmailSentAt) {
-        emailSent = true;
+      if (emailSent) {
         emailMessage = "The order confirmation email was already sent.";
       } else {
-        try {
-          const result = await sendOrderConfirmationEmail({
-            orderId: order.id,
-            customerEmail,
-            paymentReference: session.id,
-            paidAmount: session.amount_total ?? expectedSubtotal,
-            currency: session.currency ?? checkoutCurrency,
-            receiptUrl: getStripeReceiptUrl(session),
-            items: order.items.map((item) => ({
-              name: item.product.name,
-              quantity: item.qty,
-              unitAmount: item.product.price,
-              size: item.size,
-            })),
-          });
+        const emailClaimed = await db.order.updateMany({
+          where: {
+            id: order.id,
+            confirmationEmailSentAt: null,
+          },
+          data: { confirmationEmailSentAt: new Date() },
+        });
 
-          if (result.sent) {
-            emailSent = true;
-            emailMessage = "The order confirmation email was sent.";
+        if (emailClaimed.count === 0) {
+          emailSent = true;
+          emailMessage = "The order confirmation email is already processing.";
+        } else {
+          try {
+            const result = await sendOrderConfirmationEmail({
+              orderId: order.id,
+              customerEmail,
+              paymentReference: session.id,
+              paidAmount: session.amount_total ?? expectedSubtotal,
+              currency: session.currency ?? checkoutCurrency,
+              invoiceNumber: invoice?.number,
+              invoiceUrl: invoice?.hostedUrl,
+              invoicePdfUrl: invoice?.pdfUrl,
+              receiptUrl: getStripeReceiptUrl(session),
+              items: order.items.map((item) => ({
+                name: item.product.name,
+                quantity: item.qty,
+                unitAmount: item.product.price,
+                size: item.size,
+              })),
+            });
 
+            if (result.sent) {
+              emailSent = true;
+              emailMessage = "The order confirmation email was sent.";
+            } else {
+              emailMessage = `The order confirmation email was not sent: ${result.reason}.`;
+              await db.order.update({
+                where: { id: order.id },
+                data: { confirmationEmailSentAt: null },
+              });
+              console.error(emailMessage);
+            }
+          } catch (emailError) {
+            emailMessage = "The order confirmation email could not be sent.";
             await db.order.update({
               where: { id: order.id },
-              data: { confirmationEmailSentAt: new Date() },
+              data: { confirmationEmailSentAt: null },
             });
-          } else {
-            emailMessage = `The order confirmation email was not sent: ${result.reason}.`;
-            console.error(emailMessage);
+            console.error("Order confirmation email failed:", emailError);
           }
-        } catch (emailError) {
-          emailMessage = "The order confirmation email could not be sent.";
-          console.error("Order confirmation email failed:", emailError);
         }
       }
 
@@ -157,15 +233,16 @@ export async function validateCheckoutSession(
         paymentReference: session.id,
         customerEmail,
         emailSent,
-        message: emailMessage
-          ? `Payment was verified by Stripe and the order is processing. ${emailMessage}`
-          : "Payment was verified by Stripe and the order is processing.",
+        invoiceNumber: invoice?.number,
+        invoiceUrl: invoice?.hostedUrl,
+        invoicePdfUrl: invoice?.pdfUrl,
+        message: `Payment was verified by Stripe and the order is processing. ${emailMessage}`,
       };
     }
 
     if (session.status === "expired") {
-      await db.order.update({
-        where: { id: order.id },
+      await db.order.updateMany({
+        where: { id: order.id, status: "PENDING" },
         data: { status: "CANCELLED" },
       });
 
@@ -176,11 +253,6 @@ export async function validateCheckoutSession(
         message: "This checkout session expired before payment completed.",
       };
     }
-
-    await db.order.update({
-      where: { id: order.id },
-      data: { status: "PENDING" },
-    });
 
     return {
       status: "pending",
