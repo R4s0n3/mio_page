@@ -6,8 +6,9 @@ import {
   checkoutErrorResponseSchema,
   checkoutResponseSchema,
 } from "@/utils/cart-schema";
-import Image from "next/image";
 import Link from "next/link";
+
+import FallbackImage from "@/app/_components/fallback-image";
 import { useState, useEffect } from "react";
 
 export default function CartPage() {
@@ -137,7 +138,7 @@ export default function CartPage() {
                     {/* Product Image */}
                     <div className="relative aspect-square w-20 overflow-hidden rounded-lg border border-secondary-800/20 bg-surface">
                       {item.image ? (
-                        <Image
+                        <FallbackImage
                           src={item.image}
                           alt={item.name}
                           fill

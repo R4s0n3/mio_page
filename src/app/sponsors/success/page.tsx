@@ -1,6 +1,14 @@
 import Link from "next/link";
 
 import { validateSponsorCheckout } from "@/server/sponsor-checkout";
+import { pageMetadata } from "@/utils/site-metadata";
+
+export const metadata = pageMetadata({
+  title: "Sponsor checkout",
+  description: "Payment status for your Mio Mideal sponsor placement.",
+  path: "/sponsors/success",
+  index: false,
+});
 
 export const dynamic = "force-dynamic";
 

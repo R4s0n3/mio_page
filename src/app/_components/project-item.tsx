@@ -3,7 +3,7 @@ import {
   ArrowTopRightOnSquareIcon,
   InformationCircleIcon,
 } from "@heroicons/react/24/solid";
-import Image from "next/image";
+import FallbackImage from "./fallback-image";
 
 export type ProjectItemProps = {
   id: number;
@@ -44,7 +44,7 @@ export default function ProjectItem(project: ProjectItemProps) {
       </h3>
       <Icon className="absolute bottom-4 right-4 z-30 size-6" />
       <div className="relative size-14">
-        <Image
+        <FallbackImage
           className="size-full object-contain"
           sizes="14rem"
           fill

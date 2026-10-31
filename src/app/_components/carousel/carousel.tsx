@@ -7,8 +7,9 @@ import {
   NextButton,
   usePrevNextButtons,
 } from "./carousel-arrow-button";
-import Image from "next/image";
 import Link from "next/link";
+
+import FallbackImage from "../fallback-image";
 
 import useEmblaCarousel from "embla-carousel-react";
 import { priceToDisplay } from "@/server/util/functions";
@@ -52,12 +53,13 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
               key={index}
             >
               <div className="absolute z-20 size-full overflow-hidden rounded transition duration-500 group-hover:scale-105">
-                <Image
-                  width={1920}
+                <FallbackImage
+                  fill
                   quality={100}
-                  height={1080}
-                  src={slide.image ?? ""}
-                  alt="shirt"
+                  sizes="100vw"
+                  className="object-cover"
+                  src={slide.image}
+                  alt={slide.name}
                 />
               </div>
               <div className="embla__slide__number relative z-30 flex h-full flex-col justify-between p-8 pt-4">

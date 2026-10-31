@@ -1,6 +1,14 @@
 import { validateCheckoutSession } from "@/server/checkout-validation";
 import type { CheckoutValidationResult } from "@/utils/checkout-validation";
+import { pageMetadata } from "@/utils/site-metadata";
 import SuccessView from "./success-view";
+
+export const metadata = pageMetadata({
+  title: "Order confirmation",
+  description: "Payment status for your Mio Mideal order.",
+  path: "/success",
+  index: false,
+});
 
 export const dynamic = "force-dynamic";
 

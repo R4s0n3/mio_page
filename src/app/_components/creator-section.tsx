@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+
+import FallbackImage from "./fallback-image";
 import { api } from "@/trpc/react";
 import LoadingSpinner from "./loading-spinner";
 
@@ -58,10 +60,11 @@ function CreatorsItem(props: CreatorsItemProps) {
       </div>
       <div className="flex flex-1 justify-end">
         <div className="relative size-24 md:size-32">
-          <Image
-            alt="logo"
+          <FallbackImage
+            alt={item.name ? `${item.name} portrait` : "Creator portrait"}
             fill
             sizes="24rem"
+            className="object-contain"
             src={item.sig ?? "/SVG/logo.svg"}
           />
         </div>
