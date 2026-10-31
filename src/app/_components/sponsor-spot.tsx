@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowTopRightOnSquareIcon, PlusIcon } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { api, type RouterOutputs } from "@/trpc/react";
 import { formatSponsorPrice } from "@/utils/sponsor";
@@ -76,8 +76,14 @@ function nextBidAmount(slot: SponsorSlot) {
 export default function SponsorSpot({ placement, variant }: SponsorSpotProps) {
   const { data: slots, isLoading } = api.sponsor.getSlots.useQuery();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const [logoFailed, setLogoFailed] = useState(false);
   const slot = slots?.find((candidate) => candidate.placement === placement);
+  const logoUrl = slot?.currentBid?.logoUrl ?? "";
   const styles = variantStyles[variant];
+
+  useEffect(() => {
+    setLogoFailed(false);
+  }, [logoUrl]);
 
   if (isLoading) {
     return (
@@ -116,7 +122,8 @@ export default function SponsorSpot({ placement, variant }: SponsorSpotProps) {
             <img
               alt={`${slot.currentBid.advertiserName} logo`}
               className={`object-contain drop-shadow-[0_12px_24px_rgba(0,0,0,0.55)] transition duration-300 group-hover:scale-[1.04] ${styles.logo}`}
-              src={slot.currentBid.logoUrl}
+              src={logoFailed ? "/SVG/logo.svg" : slot.currentBid.logoUrl}
+              onError={() => setLogoFailed(true)}
             />
             <ArrowTopRightOnSquareIcon className="absolute right-3 top-3 size-3.5 text-body/0 transition group-hover:text-body/35" />
           </a>

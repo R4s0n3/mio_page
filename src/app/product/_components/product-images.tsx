@@ -1,5 +1,6 @@
-import Image from "next/image";
 import { useState } from "react";
+
+import FallbackImage from "@/app/_components/fallback-image";
 
 export default function ProductImages({
   name,
@@ -36,7 +37,7 @@ export default function ProductImages({
       <div className="group relative aspect-square overflow-hidden rounded-2xl border border-secondary-800/20 bg-surface">
         {displayedImage ? (
           <>
-            <Image
+            <FallbackImage
               src={displayedImage}
               alt={name}
               fill
@@ -60,7 +61,7 @@ export default function ProductImages({
 function ImageWrapper({ img, name }: { img: string; name: string }) {
   return (
     <div className="group relative aspect-square overflow-hidden bg-surface">
-      <Image
+      <FallbackImage
         src={img}
         alt={name}
         fill

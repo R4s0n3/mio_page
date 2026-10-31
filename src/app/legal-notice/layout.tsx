@@ -1,15 +1,22 @@
 import "@/styles/globals.css";
 
-import { type Metadata } from "next";
+import SetHtmlLang from "@/app/_components/set-html-lang";
+import { pageMetadata } from "@/utils/site-metadata";
 
-export const metadata: Metadata = {
-  title: "Impressum | Mio Mideal",
+export const metadata = pageMetadata({
+  title: "Impressum",
   description: "Anbieterkennzeichnung und Kontaktangaben von Mio Mideal.",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
-};
+  path: "/legal-notice",
+  locale: "de_DE",
+});
 
 export default function LegalLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return <div>{children}</div>;
+  return (
+    <div lang="de">
+      <SetHtmlLang lang="de" />
+      {children}
+    </div>
+  );
 }

@@ -1,6 +1,14 @@
 import Link from "next/link";
 
 import { getOrderStatusFromToken } from "@/server/order-status-access";
+import { pageMetadata } from "@/utils/site-metadata";
+
+export const metadata = pageMetadata({
+  title: "Order status",
+  description: "Check the status of a Mio Mideal order.",
+  path: "/order-status",
+  index: false,
+});
 
 export const dynamic = "force-dynamic";
 

@@ -1,12 +1,13 @@
-import { type Metadata } from "next";
-
 import { HydrateClient } from "@/trpc/server";
+import { pageMetadata } from "@/utils/site-metadata";
 import ProjectsPageView from "./projects-page-view";
 
-export const metadata: Metadata = {
-  title: "Projects | Mio Mideal",
-  description: "Public projects by Mio Mideal.",
-};
+export const metadata = pageMetadata({
+  title: "Projects",
+  description:
+    "Public projects by Mio Mideal, from recent releases to earlier work.",
+  path: "/projects",
+});
 
 export default async function ProjectsPage() {
   return (
