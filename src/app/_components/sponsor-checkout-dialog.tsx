@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 
 import { type RouterOutputs } from "@/trpc/react";
-import { formatSponsorPrice } from "@/utils/sponsor";
+import { formatSponsorPrice, sponsorTermDays } from "@/utils/sponsor";
 
 type SponsorSlot = RouterOutputs["sponsor"]["getSlots"][number];
 
@@ -34,6 +34,8 @@ export default function SponsorCheckoutDialog({
   initialAmount,
   onClose,
 }: SponsorCheckoutDialogProps) {
+  const isFixed = slot.pricingMode === "FIXED";
+  const termDays = sponsorTermDays(slot.durationDays);
   const uploadRef = useRef<HTMLInputElement>(null);
   const [logo, setLogo] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -157,6 +159,12 @@ export default function SponsorCheckoutDialog({
             >
               MAKE THE SPOT YOURS.
             </h2>
+            {isFixed && (
+              <p className="mt-2 max-w-md font-text text-sm normal-case tracking-normal text-body/70">
+                {formatSponsorPrice(slot.basePrice)} once for {termDays} days.
+                The spot stays yours until then and cannot be outbid.
+              </p>
+            )}
           </div>
           <button
             aria-label="Close"
@@ -244,9 +252,21 @@ export default function SponsorCheckoutDialog({
               />
             </label>
             <div className="mt-1 rounded-xl border border-highlight-green/20 bg-highlight-green/5 p-3 font-text text-xs leading-relaxed text-body/60">
-              Once Stripe confirms payment, your logo replaces the current
-              sponsor. It stays live until somebody outbids you. Uploads are
-              checked before checkout.
+              {isFixed ? (
+                <>
+                  Once Stripe confirms payment, your logo stays on this spot for{" "}
+                  {termDays} days. This is a one-time payment, not a
+                  subscription, and nobody can outbid you during that term. When
+                  it ends, the spot opens again. Uploads are checked before
+                  checkout.
+                </>
+              ) : (
+                <>
+                  Once Stripe confirms payment, your logo replaces the current
+                  sponsor. It stays live until somebody outbids you. Uploads are
+                  checked before checkout.
+                </>
+              )}
               <span className="mt-2 block text-headings/75">
                 ✦ Sponsor perk: You&apos;ll also get a little Mio mystery care
                 package. We&apos;ll use this email to arrange delivery after
@@ -298,15 +318,28 @@ export default function SponsorCheckoutDialog({
               <label className="flex items-start gap-2.5">
                 <input
                   className="mt-0.5 size-4 shrink-0 accent-highlight-cyan"
-                  name="outbidConfirmation"
+                  name={
+                    isFixed ? "fixedTermConfirmation" : "outbidConfirmation"
+                  }
                   required
                   type="checkbox"
                   value="true"
                 />
                 <span>
-                  Mir ist klar: Es gibt keine Mindestlaufzeit und keine
-                  Erstattung allein deshalb, weil der Platz später überboten
-                  wird.
+                  {isFixed ? (
+                    <>
+                      Mir ist klar: Der Platz wird einmalig für {termDays} Tage
+                      zum Festpreis gebucht. Während der Laufzeit ist kein
+                      Überbieten möglich. Allein der Ablauf der Laufzeit
+                      begründet keinen Erstattungsanspruch.
+                    </>
+                  ) : (
+                    <>
+                      Mir ist klar: Es gibt keine Mindestlaufzeit und keine
+                      Erstattung allein deshalb, weil der Platz später überboten
+                      wird.
+                    </>
+                  )}
                 </span>
               </label>
             </div>
@@ -322,7 +355,9 @@ export default function SponsorCheckoutDialog({
             >
               {isSubmitting
                 ? "Preparing checkout…"
-                : `Outbid for ${formatSponsorPrice(amount)}`}
+                : isFixed
+                  ? `Book for ${formatSponsorPrice(amount)}`
+                  : `Outbid for ${formatSponsorPrice(amount)}`}
             </button>
             <p className="text-center font-text text-[11px] text-body/35">
               Verbindliche Zahlung im nächsten Schritt über Stripe

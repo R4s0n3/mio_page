@@ -7,7 +7,7 @@ export default function PrivacyPolicy() {
     <LegalDocument
       title="Datenschutzerklärung"
       subtitle="Informationen über die Verarbeitung personenbezogener Daten auf dieser Website."
-      updated="29. August 2026"
+      updated="1. November 2026"
     >
       <LegalSection title="1. Verantwortlicher">
         <p>
@@ -92,12 +92,13 @@ export default function PrivacyPolicy() {
         <p>
           Für den Erwerb eines Sponsorplatzes verarbeiten wir Firmen- bzw.
           Markennamen, geschäftliche E-Mail-Adresse, Ziel-URL, hochgeladenes
-          Logo oder GIF, Gebotshöhe, Status sowie Zahlungs- und
+          Logo oder GIF, gebuchten Preis, Status sowie Zahlungs- und
           Transaktionsreferenzen. Nach bestätigter Zahlung werden Logo und
-          verlinkte Zielseite öffentlich auf der Website angezeigt, bis der
-          Platz durch ein höheres Gebot ersetzt wird. Dabei ist auch der
-          Markenname öffentlich erkennbar oder technisch dem Werbemittel
-          zugeordnet.
+          verlinkte Zielseite öffentlich auf der Website angezeigt. Bei einem
+          Auktionsplatz endet die Anzeige, wenn ein höheres Gebot den Platz
+          übernimmt. Bei einem Festpreisplatz endet sie mit Ablauf der gebuchten
+          Laufzeit. Dabei ist auch der Markenname öffentlich erkennbar oder
+          technisch dem Werbemittel zugeordnet.
         </p>
         <p>
           Erfolgreiche Sponsoren erhalten außerdem ein Mio Mystery Care Package.
