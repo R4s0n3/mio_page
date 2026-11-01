@@ -9,6 +9,11 @@ import {
 import Link from "next/link";
 
 import FallbackImage from "@/app/_components/fallback-image";
+import {
+  ProductGalleryThumbs,
+  useProductGallery,
+} from "@/app/_components/product-gallery";
+import { productGallery } from "@/utils/product-gallery";
 import { useState, useEffect } from "react";
 
 export default function CartPage() {
@@ -135,22 +140,7 @@ export default function CartPage() {
                   className="rounded-lg border border-secondary-800/20 bg-surface-100 p-4"
                 >
                   <div className="flex gap-4">
-                    {/* Product Image */}
-                    <div className="relative aspect-square w-20 overflow-hidden rounded-lg border border-secondary-800/20 bg-surface">
-                      {item.image ? (
-                        <FallbackImage
-                          src={item.image}
-                          alt={item.name}
-                          fill
-                          className="object-cover"
-                          sizes="80px"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center text-body/30">
-                          📦
-                        </div>
-                      )}
-                    </div>
+                    <CartItemImage item={item} />
 
                     {/* Product Details */}
                     <div className="flex-1">
@@ -299,5 +289,85 @@ export default function CartPage() {
         </div>
       </section>
     </main>
+  );
+}
+
+function CartItemImage({ item }: { item: CartItem }) {
+  if (!item.images?.length) {
+    return (
+      <div className="relative aspect-square w-20 overflow-hidden rounded-lg border border-secondary-800/20 bg-surface">
+        {item.image ? (
+          <FallbackImage
+            src={item.image}
+            alt={item.name}
+            fill
+            className="object-cover"
+            sizes="80px"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-body/30">
+            📦
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <CartItemGallery
+      images={productGallery(item.image, item.images)}
+      name={item.name}
+    />
+  );
+}
+
+function CartItemGallery({ name, images }: { name: string; images: string[] }) {
+  const { image, index, count, select, onKeyDown, swipeHandlers } =
+    useProductGallery(images);
+
+  if (count < 2 || !image) {
+    return (
+      <div className="relative aspect-square w-20 overflow-hidden rounded-lg border border-secondary-800/20 bg-surface">
+        <FallbackImage
+          src={image}
+          alt={name}
+          fill
+          className="object-cover"
+          sizes="80px"
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex w-20 flex-col gap-1">
+      <div
+        aria-label={`${name} photos`}
+        aria-roledescription="carousel"
+        className="relative aspect-square w-20 overflow-hidden rounded-lg border border-secondary-800/20 bg-surface"
+        onKeyDown={onKeyDown}
+        role="group"
+        tabIndex={0}
+        {...swipeHandlers}
+      >
+        <FallbackImage
+          src={image}
+          alt={`${name}, photo ${index + 1} of ${count}`}
+          fill
+          className="object-cover"
+          sizes="80px"
+          loading="lazy"
+        />
+      </div>
+      <ProductGalleryThumbs
+        className="flex gap-1 overflow-x-auto"
+        images={images}
+        index={index}
+        name={name}
+        onSelect={select}
+        thumbClassName="relative size-8 shrink-0 overflow-hidden rounded border bg-surface"
+      />
+    </div>
   );
 }

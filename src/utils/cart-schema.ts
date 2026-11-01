@@ -8,6 +8,7 @@ export const cartItemSchema = z.object({
   name: z.string().min(1),
   price: z.number().int().nonnegative(),
   image: optionalTextSchema,
+  images: z.array(z.string().min(1)).optional(),
   typeName: optionalTextSchema,
   size: z.string().min(1).max(32).optional(),
   quantity: z.number().int().min(1).max(99),
