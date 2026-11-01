@@ -35,7 +35,7 @@ export default function ProductImages({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex w-full min-w-0 max-w-full flex-col gap-2">
       <div
         className="group relative aspect-square overflow-hidden rounded-2xl border border-secondary-800/20 bg-surface"
         {...(multi
@@ -71,7 +71,7 @@ export default function ProductImages({
       {multi && (
         <div
           aria-label={`${name} photos`}
-          className="flex gap-2 overflow-x-auto"
+          className="flex w-full min-w-0 max-w-full gap-2 overflow-x-auto"
           onKeyDown={onThumbnailKeyDown}
           role="group"
         >
@@ -85,7 +85,7 @@ export default function ProductImages({
                 }}
                 type="button"
                 aria-pressed={selected}
-                className={`size-24 overflow-hidden rounded-2xl border ${
+                className={`size-24 flex-shrink-0 overflow-hidden rounded-2xl border ${
                   selected ? "border-accent" : "border-secondary-800/20"
                 }`}
                 onClick={() => select(idx)}

@@ -10,11 +10,9 @@ import {
 import Link from "next/link";
 
 import FallbackImage from "../fallback-image";
-import { ProductGalleryThumbs, useProductGallery } from "../product-gallery";
 
 import useEmblaCarousel from "embla-carousel-react";
 import { priceToDisplay } from "@/server/util/functions";
-import { productGallery } from "@/utils/product-gallery";
 import "@/styles/carousel/style.css";
 
 export type ProductItemType = {
@@ -23,7 +21,6 @@ export type ProductItemType = {
   id: string;
   name: string;
   image: string | null;
-  images?: unknown;
   price: number | null;
 };
 
@@ -51,7 +48,45 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
       <div className="embla__viewport" ref={emblaRef}>
         <div className="embla__container">
           {slides.map((slide) => (
-            <MerchSlide key={slide.id} slide={slide} />
+            <div
+              className="embla__slide group relative aspect-video min-w-0 flex-shrink-0 flex-grow-0 basis-full transform-gpu cursor-pointer overflow-hidden rounded border-2 border-secondary-800/20 bg-secondary-800/20 text-headings lg:basis-3/4"
+              key={slide.id}
+            >
+              <div className="absolute z-20 size-full overflow-hidden rounded transition duration-500 group-hover:scale-105">
+                <FallbackImage
+                  fill
+                  quality={100}
+                  sizes="100vw"
+                  className="object-cover"
+                  src={slide.image}
+                  alt={slide.name}
+                />
+              </div>
+              <div className="embla__slide__number relative z-30 flex h-full flex-col justify-between p-8 pt-4">
+                <h2 className="font-headline text-5xl transition duration-300 group-hover:text-accent lg:text-9xl">
+                  {slide.type}
+                </h2>
+                <div className="hidden flex-col gap-5 lg:flex">
+                  <h5 className="font-subhead text-xl lg:text-3xl">
+                    {slide.name}
+                  </h5>
+                  <p className="w-full max-w-sm font-text text-sm lg:text-lg">
+                    {slide.description}
+                  </p>
+                </div>
+                <div className="flex justify-between">
+                  <h5 className="font-subhead text-3xl">
+                    {priceToDisplay(slide.price ?? 0).toFixed(2)}€
+                  </h5>
+                  <Link
+                    className="font-subhead text-3xl transition duration-300 group-hover:text-accent"
+                    href={`product/${slide.id}`}
+                  >
+                    Buy now
+                  </Link>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -77,74 +112,5 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     </section>
   );
 };
-
-function MerchSlide({ slide }: { slide: ProductItemType }) {
-  const gallery = productGallery(slide.image, slide.images);
-  const multi = gallery.length > 1;
-  const selection = useProductGallery(multi ? gallery : []);
-  const displayed = multi ? (selection.image ?? slide.image) : slide.image;
-
-  return (
-    <div className="embla__slide group relative aspect-video min-w-0 flex-shrink-0 flex-grow-0 basis-full transform-gpu cursor-pointer overflow-hidden rounded border-2 border-secondary-800/20 bg-secondary-800/20 text-headings lg:basis-3/4">
-      <div className="absolute z-20 size-full overflow-hidden rounded transition duration-500 group-hover:scale-105">
-        <FallbackImage
-          fill
-          quality={100}
-          sizes="100vw"
-          className="object-cover"
-          src={displayed}
-          alt={
-            multi
-              ? `${slide.name}, photo ${selection.index + 1} of ${selection.count}`
-              : slide.name
-          }
-          {...(multi ? { loading: "lazy" as const } : {})}
-        />
-      </div>
-      <div
-        className={
-          multi
-            ? "embla__slide__number pointer-events-none relative z-30 flex h-full flex-col justify-between p-8 pt-4"
-            : "embla__slide__number relative z-30 flex h-full flex-col justify-between p-8 pt-4"
-        }
-      >
-        <h2 className="font-headline text-5xl transition duration-300 group-hover:text-accent lg:text-9xl">
-          {slide.type}
-        </h2>
-        <div className="hidden flex-col gap-5 lg:flex">
-          <h5 className="font-subhead text-xl lg:text-3xl">{slide.name}</h5>
-          <p className="w-full max-w-sm font-text text-sm lg:text-lg">
-            {slide.description}
-          </p>
-        </div>
-        <div className="flex justify-between">
-          <h5 className="font-subhead text-3xl">
-            {priceToDisplay(slide.price ?? 0).toFixed(2)}€
-          </h5>
-          <Link
-            className={
-              multi
-                ? "pointer-events-auto font-subhead text-3xl transition duration-300 group-hover:text-accent"
-                : "font-subhead text-3xl transition duration-300 group-hover:text-accent"
-            }
-            href={`product/${slide.id}`}
-          >
-            Buy now
-          </Link>
-        </div>
-      </div>
-      {multi && (
-        <ProductGalleryThumbs
-          className="absolute bottom-20 left-8 right-36 z-40 flex gap-2 overflow-x-auto"
-          images={gallery}
-          index={selection.index}
-          name={slide.name}
-          onSelect={selection.select}
-          thumbClassName="relative size-12 shrink-0 overflow-hidden rounded-lg border bg-surface"
-        />
-      )}
-    </div>
-  );
-}
 
 export default EmblaCarousel;

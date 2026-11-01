@@ -75,8 +75,8 @@ export default function SingleView({ pid }: { pid?: string }) {
   const hasSizes = type.name === "T-SHIRT";
 
   return (
-    <section className="container mx-auto size-full px-4 py-8">
-      <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2">
+    <section className="container mx-auto size-full min-w-0 max-w-full px-4 py-8">
+      <div className="mx-auto grid w-full min-w-0 max-w-6xl gap-8 lg:grid-cols-2">
         {/* Product Image */}
         <ProductImages name={name} images={images} />
         {/* Product Details */}

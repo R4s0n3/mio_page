@@ -10,7 +10,6 @@ export type ProductItemType = {
   id: string;
   name: string;
   image: string | null;
-  images?: unknown;
   price: number;
 };
 
@@ -26,7 +25,6 @@ export default function MerchCarousel() {
       name: i.name,
       type: i.type?.name ?? "",
       image: i.image,
-      images: i.images,
       price: i.price,
     })) ?? [];
 
