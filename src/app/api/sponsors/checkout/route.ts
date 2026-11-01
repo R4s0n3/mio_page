@@ -6,6 +6,12 @@ import { db } from "@/server/db";
 import { KLEINUNTERNEHMER_INVOICE_FOOTER } from "@/server/stripe-invoice";
 import { stripe } from "@/server/stripe";
 import { uploadSponsorLogo } from "@/server/sponsor-upload";
+import {
+  formatSponsorDate,
+  isFixedSponsorBookingActive,
+  SPONSOR_TERMS_VERSION,
+  sponsorTermDays,
+} from "@/utils/sponsor";
 
 const checkoutSchema = z.object({
   slotId: z.string().min(1).max(191),
@@ -22,7 +28,8 @@ const checkoutSchema = z.object({
   expectedAmount: z.coerce.number().int().positive(),
   businessConfirmation: z.literal("true"),
   termsAccepted: z.literal("true"),
-  outbidConfirmation: z.literal("true"),
+  outbidConfirmation: z.string().optional(),
+  fixedTermConfirmation: z.string().optional(),
 });
 
 function formValue(formData: FormData, key: string) {
@@ -44,6 +51,7 @@ export async function POST(request: NextRequest) {
       businessConfirmation: formValue(formData, "businessConfirmation"),
       termsAccepted: formValue(formData, "termsAccepted"),
       outbidConfirmation: formValue(formData, "outbidConfirmation"),
+      fixedTermConfirmation: formValue(formData, "fixedTermConfirmation"),
     });
     const logo = formData.get("logo");
 
@@ -59,7 +67,9 @@ export async function POST(request: NextRequest) {
 
     const slot = await db.sponsorSlot.findFirst({
       where: { id: parsed.data.slotId, enabled: true },
-      include: { currentBid: { select: { amount: true } } },
+      include: {
+        currentBid: { select: { amount: true, status: true, expiresAt: true } },
+      },
     });
 
     if (!slot) {
@@ -69,14 +79,49 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const nextAmount = slot.currentBid
-      ? slot.currentBid.amount + slot.minIncrement
-      : slot.basePrice;
+    const isFixed = slot.pricingMode === "FIXED";
+    const termDays = sponsorTermDays(slot.durationDays);
+    const now = new Date();
+
+    if (
+      isFixed &&
+      slot.currentBid?.expiresAt &&
+      isFixedSponsorBookingActive(slot.currentBid, now)
+    ) {
+      return NextResponse.json(
+        {
+          error: `This spot is booked until ${formatSponsorDate(slot.currentBid.expiresAt)}.`,
+        },
+        { status: 409 },
+      );
+    }
+
+    if (isFixed && parsed.data.fixedTermConfirmation !== "true") {
+      return NextResponse.json(
+        { error: "Please confirm the fixed-term booking terms." },
+        { status: 400 },
+      );
+    }
+
+    if (!isFixed && parsed.data.outbidConfirmation !== "true") {
+      return NextResponse.json(
+        { error: "Please confirm the outbid terms." },
+        { status: 400 },
+      );
+    }
+
+    const nextAmount = isFixed
+      ? slot.basePrice
+      : slot.currentBid
+        ? slot.currentBid.amount + slot.minIncrement
+        : slot.basePrice;
 
     if (parsed.data.expectedAmount !== nextAmount) {
       return NextResponse.json(
         {
-          error: "That spot has a new price. Please review the updated bid.",
+          error: isFixed
+            ? "That spot has a new price. Please review the updated price."
+            : "That spot has a new price. Please review the updated bid.",
           nextAmount,
         },
         { status: 409 },
@@ -118,9 +163,12 @@ export async function POST(request: NextRequest) {
           price_data: {
             currency: "eur",
             product_data: {
-              name: `Sponsor spot · ${slot.name}`,
-              description:
-                "Your logo stays live until another sponsor outbids this placement. A Mio mystery care package is included.",
+              name: isFixed
+                ? `Sponsor spot · ${slot.name} · ${termDays} days`
+                : `Sponsor spot · ${slot.name}`,
+              description: isFixed
+                ? `Your logo stays live for ${termDays} days. This is a one-time payment, and the spot cannot be outbid during that term. A Mio mystery care package is included.`
+                : "Your logo stays live until another sponsor outbids this placement. A Mio mystery care package is included.",
             },
             unit_amount: bid.amount,
           },
@@ -147,10 +195,16 @@ export async function POST(request: NextRequest) {
         checkoutType: "sponsor",
         sponsorBidId: bid.id,
         sponsorSlotId: slot.id,
+        pricingMode: slot.pricingMode,
         businessConfirmation: "true",
         termsAccepted: "true",
-        termsVersion: "2026-08-29",
-        outbidConfirmation: "true",
+        termsVersion: SPONSOR_TERMS_VERSION,
+        ...(isFixed
+          ? {
+              fixedTermConfirmation: "true",
+              durationDays: String(termDays),
+            }
+          : { outbidConfirmation: "true" }),
       },
       tax_id_collection: { enabled: true },
     });

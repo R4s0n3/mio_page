@@ -7,7 +7,7 @@ export default function TermsAndConditions() {
     <LegalDocument
       title="Allgemeine Geschäftsbedingungen"
       subtitle="Für den Mio-Mideal-Onlineshop und die Buchung von Sponsorplätzen."
-      updated="29. August 2026"
+      updated="1. November 2026"
     >
       <LegalSection title="1. Anbieter und Geltungsbereich">
         <p>Diese Allgemeinen Geschäftsbedingungen gelten für Verträge mit:</p>
@@ -123,34 +123,58 @@ export default function TermsAndConditions() {
           Sinne von § 14 BGB, also an natürliche oder juristische Personen oder
           rechtsfähige Personengesellschaften, die bei Vertragsschluss in
           Ausübung ihrer gewerblichen oder selbstständigen beruflichen Tätigkeit
-          handeln. Eine Buchung durch Verbraucher ist ausgeschlossen.
+          handeln. Eine Buchung durch Verbraucher ist ausgeschlossen. Das gilt
+          für den Auktionsplatz und für die Festpreisplätze gleichermaßen.
         </p>
       </LegalSection>
 
-      <LegalSection title="8. Buchung und Outbid-Prinzip">
+      <LegalSection title="8. Buchung, Auktion und Festpreis">
         <p>
-          Jeder Werbeplatz weist einen aktuell erforderlichen Preis aus. Ist der
-          Platz bereits belegt, entspricht dieser grundsätzlich dem bisherigen
+          Es gibt zwei Buchungsmodelle. Welches Modell für einen Platz gilt,
+          ergibt sich aus der Darstellung auf der Website und aus dem Checkout.
+          Die Zahlung erfolgt in beiden Modellen einmalig über Stripe. Es wird
+          kein Abonnement und keine automatische Verlängerung begründet.
+        </p>
+        <h3>Auktionsplatz</h3>
+        <p>
+          Derzeit wird der Platz „Above the fold“ (Hero-Billboard) als Auktion
+          geführt. Der Platz weist einen aktuell erforderlichen Preis aus. Ist
+          er bereits belegt, entspricht dieser grundsätzlich dem bisherigen
           Betrag zuzüglich des für den Platz festgelegten Mindestaufschlags. Der
           im Checkout angezeigte Betrag ist maßgeblich. Ändert sich der Preis
           vor Beginn des Zahlungsprozesses, muss der aktualisierte Betrag erneut
           bestätigt werden.
         </p>
         <p>
-          Mit Abschluss des Stripe-Checkouts geben Sie ein verbindliches Angebot
-          für den ausgewählten Werbeplatz ab. Der Vertrag kommt mit unserer
-          Bestätigung bzw. Freischaltung nach erfolgreicher Zahlung zustande.
-          Sollte der Platz wegen einer zeitgleichen Buchung nicht mehr zu den
-          bestätigten Konditionen verfügbar sein, wird der Betrag
-          zurückerstattet.
-        </p>
-        <p>
           Nach Freischaltung bleibt das Werbemittel grundsätzlich sichtbar, bis
           ein anderer Unternehmer den Platz wirksam zu einem höheren Preis
           übernimmt. Es gibt keine garantierte Mindestlaufzeit und keine
           Erstattung allein deshalb, weil das Werbemittel später überboten und
-          ersetzt wird. Garantierte Impressionen, Klickzahlen, Reichweiten oder
-          Werbeerfolge sind nicht geschuldet.
+          ersetzt wird.
+        </p>
+        <h3>Festpreisplätze</h3>
+        <p>
+          Die übrigen Plätze werden zu einem festen Preis für eine feste
+          Laufzeit gebucht. Die Standardlaufzeit beträgt 30 Tage ab
+          Freischaltung, sofern für den Platz keine andere Laufzeit angezeigt
+          wird. Der im Checkout angezeigte Festpreis ist maßgeblich. Während der
+          Laufzeit ist der Platz belegt, kann nicht neu gebucht und nicht
+          überboten werden. Mit Ablauf der Laufzeit endet die Schaltung
+          automatisch; der Platz wird wieder buchbar, ohne dass es einer
+          Kündigung bedarf. Eine Erstattung allein wegen des Ablaufs der
+          Laufzeit erfolgt nicht. Eine vorzeitige Beendigung auf Wunsch des
+          Sponsors ist nicht vorgesehen.
+        </p>
+        <h3>Gemeinsame Regeln</h3>
+        <p>
+          Mit Abschluss des Stripe-Checkouts geben Sie ein verbindliches Angebot
+          für den ausgewählten Werbeplatz zu den im Checkout angezeigten
+          Konditionen ab. Der Vertrag kommt mit unserer Bestätigung bzw.
+          Freischaltung nach erfolgreicher Zahlung zustande. Sollte der Platz
+          wegen einer zeitgleichen Buchung nicht mehr zu den bestätigten
+          Konditionen verfügbar sein, wird der Betrag zurückerstattet.
+          Garantierte Impressionen, Klickzahlen, Reichweiten oder Werbeerfolge
+          sind nicht geschuldet.
         </p>
         <h3>Mio Mystery Care Package</h3>
         <p>
@@ -158,8 +182,9 @@ export default function TermsAndConditions() {
           Mystery Care Package ohne zusätzlichen Produktpreis. Inhalt,
           Zusammenstellung und Gestaltung des Überraschungspakets bestimmen wir;
           ein bestimmter Warenwert oder konkrete Einzelstücke sind nicht
-          geschuldet. Ein späteres Überbieten lässt den Anspruch auf dieses
-          Paket unberührt.
+          geschuldet. Ein späteres Überbieten eines Auktionsplatzes oder der
+          Ablauf der Laufzeit eines Festpreisplatzes lässt den Anspruch auf
+          dieses Paket unberührt.
         </p>
         <p>
           Zur Versandabwicklung kontaktieren wir den Sponsor einmalig über die
@@ -178,7 +203,10 @@ export default function TermsAndConditions() {
           Vertragsdauer das einfache, räumlich unbeschränkte Recht ein, Logo,
           GIF, Markenname und Link auf der Website technisch zu vervielfältigen,
           öffentlich zugänglich zu machen und in der für den Platz nötigen Größe
-          darzustellen.
+          darzustellen. Die Rechte gelten bei einem Auktionsplatz bis zur
+          Ablösung durch ein höheres Gebot und bei einem Festpreisplatz bis zum
+          Ende der gebuchten Laufzeit. Danach dürfen wir das Werbemittel von der
+          Website entfernen.
         </p>
         <p>
           Sie sichern zu, dass Inhalte und Zielseite rechtmäßig sind, keine
@@ -198,13 +226,20 @@ export default function TermsAndConditions() {
           unterbrechungsfreien Betrieb. Vorübergehende Einschränkungen durch
           Wartung, Sicherheitsmaßnahmen, Störungen bei Infrastruktur-Anbietern
           oder Ereignisse außerhalb unseres Einflussbereichs begründen keine
-          Ansprüche, soweit die Einschränkung unerheblich ist. Bei einer von uns
-          zu vertretenden erheblichen und länger andauernden Störung bleiben die
-          gesetzlichen Rechte unberührt.
+          Ansprüche, soweit die Einschränkung unerheblich ist. Die Laufzeit
+          eines Festpreisplatzes ist ein Kalenderzeitraum und verlängert sich
+          nicht automatisch um solche Zeiten. Bei einer von uns zu vertretenden
+          erheblichen und länger andauernden Störung bleiben die gesetzlichen
+          Rechte unberührt. Das gilt für Auktions- und Festpreisplätze.
         </p>
       </LegalSection>
 
       <LegalSection title="11. Haftung">
+        <p>
+          Die folgenden Haftungsregeln gelten für Auktions- und Festpreisplätze.
+          Keines der beiden Modelle enthält eine Garantie bestimmter Abruf-,
+          Klick- oder Umsatzzahlen.
+        </p>
         <p>
           Wir haften unbeschränkt bei Vorsatz und grober Fahrlässigkeit, wegen
           Schäden aus der Verletzung des Lebens, des Körpers oder der

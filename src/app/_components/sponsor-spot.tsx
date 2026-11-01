@@ -4,7 +4,11 @@ import { ArrowTopRightOnSquareIcon, PlusIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 
 import { api, type RouterOutputs } from "@/trpc/react";
-import { formatSponsorPrice } from "@/utils/sponsor";
+import {
+  fixedSlotBookedLabel,
+  fixedSlotOfferLabel,
+  formatSponsorPrice,
+} from "@/utils/sponsor";
 import SponsorCheckoutDialog from "./sponsor-checkout-dialog";
 
 export const sponsorPlacements = [
@@ -73,6 +77,9 @@ function nextBidAmount(slot: SponsorSlot) {
     : slot.basePrice;
 }
 
+const pricePillClass =
+  "absolute bottom-2 right-2 z-20 max-w-[calc(100%-1rem)] rounded-full border border-body/10 bg-primary-900/80 px-2.5 py-1.5 text-right font-text text-[9px] uppercase tracking-wide text-body/55 opacity-70 backdrop-blur transition hover:border-body/25 hover:text-headings focus:opacity-100 sm:translate-y-0.5 sm:opacity-35 sm:group-hover:translate-y-0 sm:group-hover:opacity-100";
+
 export default function SponsorSpot({ placement, variant }: SponsorSpotProps) {
   const { data: slots, isLoading } = api.sponsor.getSlots.useQuery();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -95,6 +102,8 @@ export default function SponsorSpot({ placement, variant }: SponsorSpotProps) {
   }
   if (!slot) return null;
 
+  const isFixed = slot.pricingMode === "FIXED";
+  const fixedBooked = isFixed && Boolean(slot.currentBid?.expiresAt);
   const nextAmount = nextBidAmount(slot);
 
   return (
@@ -129,7 +138,11 @@ export default function SponsorSpot({ placement, variant }: SponsorSpotProps) {
           </a>
         ) : (
           <button
-            aria-label={`Claim ${slot.name} sponsor placement`}
+            aria-label={
+              isFixed
+                ? `Book ${slot.name} sponsor placement`
+                : `Claim ${slot.name} sponsor placement`
+            }
             className="absolute inset-0 flex flex-col items-center justify-center gap-1 text-body/25 transition hover:text-body/45"
             onClick={() => setCheckoutOpen(true)}
             type="button"
@@ -141,19 +154,26 @@ export default function SponsorSpot({ placement, variant }: SponsorSpotProps) {
           </button>
         )}
 
-        <button
-          className="absolute bottom-2 right-2 z-20 rounded-full border border-body/10 bg-primary-900/80 px-2.5 py-1.5 font-text text-[9px] uppercase tracking-wide text-body/55 opacity-70 backdrop-blur transition hover:border-body/25 hover:text-headings focus:opacity-100 sm:translate-y-0.5 sm:opacity-35 sm:group-hover:translate-y-0 sm:group-hover:opacity-100"
-          onClick={() => setCheckoutOpen(true)}
-          type="button"
-        >
-          {slot.currentBid ? "Outbid" : "Claim"}{" "}
-          {formatSponsorPrice(nextAmount)}
-        </button>
+        {fixedBooked && slot.currentBid?.expiresAt ? (
+          <span className={pricePillClass}>
+            {fixedSlotBookedLabel(slot.currentBid.expiresAt)}
+          </span>
+        ) : (
+          <button
+            className={pricePillClass}
+            onClick={() => setCheckoutOpen(true)}
+            type="button"
+          >
+            {isFixed
+              ? fixedSlotOfferLabel(slot.basePrice, slot.durationDays)
+              : `${slot.currentBid ? "Outbid" : "Claim"} ${formatSponsorPrice(nextAmount)}`}
+          </button>
+        )}
       </article>
 
-      {checkoutOpen && (
+      {checkoutOpen && !fixedBooked && (
         <SponsorCheckoutDialog
-          initialAmount={nextAmount}
+          initialAmount={isFixed ? slot.basePrice : nextAmount}
           onClose={() => setCheckoutOpen(false)}
           slot={slot}
         />

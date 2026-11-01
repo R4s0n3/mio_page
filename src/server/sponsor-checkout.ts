@@ -9,6 +9,11 @@ import {
   type StripeInvoiceSummary,
 } from "@/server/stripe-invoice";
 import { stripe } from "@/server/stripe";
+import {
+  fixedTermExpiresAt,
+  formatSponsorDate,
+  sponsorTermDays,
+} from "@/utils/sponsor";
 
 export type SponsorCheckoutResult = {
   status:
@@ -159,6 +164,125 @@ async function refundUnactivatedSponsorBid({
   });
 }
 
+function durationDaysFromCheckout(
+  session: Stripe.Checkout.Session,
+  slotDurationDays: number | null,
+) {
+  const raw = Number(session.metadata?.durationDays);
+  if (Number.isInteger(raw) && raw >= 1 && raw <= 366) return raw;
+  return sponsorTermDays(slotDurationDays);
+}
+
+async function finalizeFixedSponsorCheckout({
+  bid,
+  paidAt,
+  paymentIntentId,
+  paymentReference,
+  invoice,
+  durationDays,
+}: {
+  bid: {
+    id: string;
+    slotId: string;
+    amount: number;
+    advertiserName: string;
+    activatedAt: Date | null;
+    expiresAt: Date | null;
+    stripeRefundId: string | null;
+    stripeCreditNoteId: string | null;
+    slot: { name: string };
+  };
+  paidAt: Date;
+  paymentIntentId?: string;
+  paymentReference?: string;
+  invoice?: StripeInvoiceSummary;
+  durationDays: number;
+}): Promise<SponsorCheckoutResult> {
+  const now = new Date();
+  const activatedAt = bid.activatedAt ?? paidAt;
+  const expiresAt =
+    bid.expiresAt ?? fixedTermExpiresAt(activatedAt, durationDays);
+
+  const result = await db.$transaction(async (tx) => {
+    const promoted = await tx.sponsorSlot.updateMany({
+      where: {
+        id: bid.slotId,
+        OR: [
+          { currentBidId: null },
+          { currentBidId: bid.id },
+          {
+            currentBid: {
+              is: {
+                OR: [
+                  { status: { not: "ACTIVE" } },
+                  { expiresAt: null },
+                  { expiresAt: { lte: now } },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      data: { currentBidId: bid.id },
+    });
+
+    if (promoted.count > 0) {
+      await tx.sponsorBid.update({
+        where: { id: bid.id },
+        data: {
+          status: "ACTIVE",
+          activatedAt,
+          expiresAt,
+        },
+      });
+      return "active" as const;
+    }
+
+    if (bid.activatedAt) return "active" as const;
+
+    await tx.sponsorBid.update({
+      where: { id: bid.id },
+      data: { status: "OUTBID" },
+    });
+    return "unavailable" as const;
+  });
+
+  if (result === "unavailable") {
+    const refreshedBid = await db.sponsorBid.findUnique({
+      where: { id: bid.id },
+      select: { stripeRefundId: true, stripeCreditNoteId: true },
+    });
+    await refundUnactivatedSponsorBid({
+      bidId: bid.id,
+      amount: bid.amount,
+      paymentIntentId,
+      invoice,
+      existingRefundId: refreshedBid?.stripeRefundId,
+      existingCreditNoteId: refreshedBid?.stripeCreditNoteId,
+    });
+    return {
+      status: "refunded",
+      message:
+        "Payment succeeded, but a competing checkout claimed this placement first. Stripe refunded the payment.",
+      advertiserName: bid.advertiserName,
+      slotName: bid.slot.name,
+      amount: bid.amount,
+      paymentReference,
+      ...invoiceResult(invoice),
+    };
+  }
+
+  return {
+    status: "active",
+    message: `Your logo is live until ${formatSponsorDate(expiresAt)}.`,
+    advertiserName: bid.advertiserName,
+    slotName: bid.slot.name,
+    amount: bid.amount,
+    paymentReference,
+    ...invoiceResult(invoice),
+  };
+}
+
 export async function finalizeSponsorCheckout(
   session: Stripe.Checkout.Session,
 ): Promise<SponsorCheckoutResult> {
@@ -282,6 +406,17 @@ export async function finalizeSponsorCheckout(
       paymentReference: session.id,
       ...invoiceResult(invoice),
     };
+  }
+
+  if (bid.slot.pricingMode === "FIXED") {
+    return finalizeFixedSponsorCheckout({
+      bid,
+      paidAt,
+      paymentIntentId,
+      paymentReference: session.id,
+      invoice,
+      durationDays: durationDaysFromCheckout(session, bid.slot.durationDays),
+    });
   }
 
   const result = await db.$transaction(async (tx) => {
