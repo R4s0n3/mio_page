@@ -25,10 +25,10 @@ const socialLinks: SocialListItem[] = [
 ];
 
 const legalLinks = [
-  { href: "/legal-notice", label: "Impressum" },
-  { href: "/privacy-policy", label: "Datenschutz" },
-  { href: "/terms-and-conditions", label: "AGB" },
-  { href: "/right-of-withdrawal", label: "Widerruf" },
+  { href: "/legal-notice", label: "Imprint" },
+  { href: "/privacy-policy", label: "Privacy Policy" },
+  { href: "/terms-and-conditions", label: "Terms" },
+  { href: "/right-of-withdrawal", label: "Right of Withdrawal" },
 ];
 
 export default function Footer() {
