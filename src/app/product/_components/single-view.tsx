@@ -4,6 +4,7 @@ import { api } from "@/trpc/react";
 import LoadingSpinner from "@/app/_components/loading-spinner";
 import { useState } from "react";
 import { cartUtils } from "@/utils/cart";
+import { productGallery, productGalleryExtras } from "@/utils/product-gallery";
 import ProductImages from "./product-images";
 
 export default function SingleView({ pid }: { pid?: string }) {
@@ -35,12 +36,14 @@ export default function SingleView({ pid }: { pid?: string }) {
     setIsAddingToCart(true);
 
     try {
+      const extras = productGalleryExtras(product.image, product.images);
       cartUtils.addToCart(
         {
           id: product.id,
           name: product.name,
           price: product.price,
           image: product.image ?? undefined,
+          ...(extras.length > 0 ? { images: extras } : {}),
           typeName: product.type.name,
         },
         quantity,
@@ -63,12 +66,10 @@ export default function SingleView({ pid }: { pid?: string }) {
 
   const { name, description, detailImages, price, type } = product;
 
-  const images = [
+  const images = productGallery(
     product.image,
-    ...detailImages.map((detailImage) => detailImage.imageUrl),
-  ].filter(
-    (image, index, allImages): image is string =>
-      Boolean(image) && allImages.indexOf(image) === index,
+    product.images,
+    detailImages.map((detailImage) => detailImage.imageUrl),
   );
 
   const hasSizes = type.name === "T-SHIRT";

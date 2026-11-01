@@ -17,6 +17,8 @@ datasource db {
 model Product {
   id           String         @id @default(cuid())
   image        String?
+  /// Extra photo URLs. The storefront gallery is [image, ...images], de-duplicated.
+  images       Json?
   detailImages ProductImage[]
   name         String
   description  String?        @db.Text

@@ -40,6 +40,7 @@ export const cartUtils = {
       name: string;
       price: number;
       image?: string;
+      images?: string[];
       typeName?: string;
     },
     quantity: number,
@@ -66,6 +67,9 @@ export const cartUtils = {
         name: product.name,
         price: product.price,
         image: product.image,
+        ...(product.images && product.images.length > 0
+          ? { images: product.images }
+          : {}),
         typeName: product.typeName,
         size,
         quantity,
