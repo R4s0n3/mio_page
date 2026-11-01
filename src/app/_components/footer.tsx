@@ -35,7 +35,9 @@ export default function Footer() {
   return (
     <footer className="flex w-full items-center justify-center gap-8 bg-primary-900 p-8 font-sans text-headings">
       <div className="container flex flex-col items-center justify-center gap-8">
-        <h5 className="font-subhead text-3xl uppercase">Come hang with us!</h5>
+        <h5 className="w-full text-center font-subhead text-3xl uppercase">
+          Come hang with us!
+        </h5>
         <div className="flex w-full items-center justify-center gap-4">
           {socialLinks.map((link) => (
             <Link key={link.id} href={link.link}>
