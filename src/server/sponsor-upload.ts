@@ -1,12 +1,10 @@
 import "server-only";
 
 import { env } from "@/env";
+import { sanitizeSponsorLogo } from "./sponsor-logo-sanitizer";
 import { resolveUploadedLogoUrl } from "@/utils/cdn-logo-url";
 
-const MAX_LOGO_BYTES = 2 * 1024 * 1024;
 const MAX_LOGO_URL_LENGTH = 191;
-const PNG_SIGNATURE = "89504e470d0a1a0a";
-const GIF_SIGNATURES = new Set(["GIF87a", "GIF89a"]);
 
 type UploadResponse = {
   files?:
@@ -15,52 +13,6 @@ type UploadResponse = {
         url?: string;
       }>;
 };
-
-function isSafeSvg(buffer: Buffer) {
-  const source = buffer.toString("utf8").trim();
-  const normalized = source.toLowerCase();
-
-  return (
-    (normalized.startsWith("<svg") || normalized.startsWith("<?xml")) &&
-    normalized.includes("<svg") &&
-    !normalized.includes("<script") &&
-    !normalized.includes("javascript:") &&
-    !normalized.includes("<foreignobject") &&
-    !/\son[a-z]+\s*=/.test(normalized)
-  );
-}
-
-function validateLogo(file: File, buffer: Buffer) {
-  const extension = file.name.split(".").pop()?.toLowerCase();
-
-  if (file.size === 0 || file.size > MAX_LOGO_BYTES) {
-    throw new Error("Logo files must be smaller than 2 MB.");
-  }
-
-  if (file.type === "image/png" && extension === "png") {
-    if (!buffer.subarray(0, 8).toString("hex").startsWith(PNG_SIGNATURE)) {
-      throw new Error("That file is not a valid PNG image.");
-    }
-    return;
-  }
-
-  if (file.type === "image/gif" && extension === "gif") {
-    if (!GIF_SIGNATURES.has(buffer.subarray(0, 6).toString("ascii"))) {
-      throw new Error("That file is not a valid GIF image.");
-    }
-    return;
-  }
-
-  if (
-    file.type === "image/svg+xml" &&
-    extension === "svg" &&
-    isSafeSvg(buffer)
-  ) {
-    return;
-  }
-
-  throw new Error("Please upload a valid .png, .gif, or safe .svg logo.");
-}
 
 function uploadTarget() {
   if (env.CDN_URL && env.CDN_API_KEY) {
@@ -96,11 +48,10 @@ function uploadedFileUrl(payload: UploadResponse) {
 
 export async function uploadSponsorLogo(file: File) {
   const target = uploadTarget();
-  const buffer = Buffer.from(await file.arrayBuffer());
-  validateLogo(file, buffer);
+  const sanitized = await sanitizeSponsorLogo(file);
 
   const formData = new FormData();
-  formData.append("file", new File([buffer], file.name, { type: file.type }));
+  formData.append("file", sanitized);
 
   const response = await fetch(target.endpoint, {
     method: "POST",

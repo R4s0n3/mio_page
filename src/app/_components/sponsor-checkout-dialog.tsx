@@ -24,8 +24,9 @@ type SponsorCheckoutDialogProps = {
 
 function validLogo(file: File) {
   return (
-    ["image/png", "image/gif", "image/svg+xml"].includes(file.type) &&
-    file.size <= 2 * 1024 * 1024
+    ["image/png", "image/jpeg", "image/gif", "image/webp"].includes(
+      file.type,
+    ) && file.size <= 2 * 1024 * 1024
   );
 }
 
@@ -71,7 +72,7 @@ export default function SponsorCheckoutDialog({
     if (!file) return;
     if (!validLogo(file)) {
       setLogo(null);
-      setError("Choose a .png, .gif, or .svg logo up to 2 MB.");
+      setError("Choose a PNG, JPEG, GIF, or WebP logo up to 2 MB.");
       return;
     }
     setError(null);
@@ -200,13 +201,13 @@ export default function SponsorCheckoutDialog({
                     Drop your logo here
                   </span>
                   <span className="font-text text-xs text-body/45">
-                    PNG, animated GIF, or safe SVG · 2 MB max
+                    PNG, JPEG, animated GIF, or WebP · 2 MB max
                   </span>
                 </>
               )}
             </button>
             <input
-              accept=".png,.gif,.svg,image/png,image/gif,image/svg+xml"
+              accept=".png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp"
               className="hidden"
               onChange={handleFileChange}
               ref={uploadRef}

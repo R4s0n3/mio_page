@@ -6,6 +6,8 @@ import { db } from "@/server/db";
 import { KLEINUNTERNEHMER_INVOICE_FOOTER } from "@/server/stripe-invoice";
 import { stripe } from "@/server/stripe";
 import { uploadSponsorLogo } from "@/server/sponsor-upload";
+import { readSponsorFormData } from "@/server/sponsor-form-data";
+import { SponsorUploadError } from "@/server/sponsor-upload-errors";
 import {
   formatSponsorDate,
   isFixedSponsorBookingActive,
@@ -41,7 +43,7 @@ export async function POST(request: NextRequest) {
   let pendingBidId: string | undefined;
 
   try {
-    const formData = await request.formData();
+    const formData = await readSponsorFormData(request);
     const parsed = checkoutSchema.safeParse({
       slotId: formValue(formData, "slotId"),
       advertiserName: formValue(formData, "advertiserName"),
@@ -220,6 +222,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ checkoutUrl: session.url });
   } catch (error) {
+    if (error instanceof SponsorUploadError)
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status },
+      );
     if (pendingBidId) {
       await db.sponsorBid
         .updateMany({
