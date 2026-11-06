@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { HydrateClient } from "@/trpc/server";
@@ -6,6 +5,7 @@ import ProjectsGrid from "./_components/projects-grid";
 import CreatorSection from "./_components/creator-section";
 import MerchCarousel from "./_components/merch-carousel";
 import SponsorSpot from "./_components/sponsor-spot";
+import { MioAvatar } from "./_components/mio-avatar";
 
 export default async function Home() {
   return (
@@ -16,13 +16,7 @@ export default async function Home() {
           className="container flex flex-col justify-center gap-12 px-4 pt-16"
         >
           <div className="flex w-full flex-col items-center justify-center gap-4">
-            <Image
-              className="logo-animation size-56"
-              alt="mio logo"
-              width={225}
-              height={225}
-              src="/SVG/logo.svg"
-            />
+            <MioAvatar />
             <h1 className="font-headline text-5xl sm:text-[5rem]">
               Mio Mideal
             </h1>
