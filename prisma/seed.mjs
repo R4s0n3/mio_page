@@ -163,6 +163,57 @@ const bids = [
   },
 ];
 
+const toastyyProject = {
+  name: "Toastyy",
+  url: "https://toasty.app.miomideal.com/",
+  type: "PROJECT",
+  image: "/assets/apps/toastyy.jpg",
+  content:
+    "Pull, time it right, and level up your toast. Toast, evolved. From humble bread to a little work of art. A timing game with a 3D toaster. Pull the lever, wait until the STOP button lights up and tap in the final moment before the toast pops. Every slice earns XP, perfect timing earns more, and 1,000,000 XP unlocks the DAYDREAM toast. Difficulty knob, streaks, and best score records. A native iPhone app is in progress.",
+  status: "PUBLIC",
+};
+
+async function ensureToastyy(tx) {
+  const existing = await tx.post.findFirst({
+    where: { type: "PROJECT", name: toastyyProject.name },
+    select: { id: true },
+  });
+  if (existing) return false;
+
+  const author =
+    (await tx.user.findFirst({
+      where: { role: "ADMIO" },
+      orderBy: { id: "asc" },
+      select: { id: true },
+    })) ??
+    (await tx.user.findFirst({
+      orderBy: { id: "asc" },
+      select: { id: true },
+    }));
+
+  const createdById =
+    author?.id ??
+    (
+      await tx.user.create({
+        data: {
+          id: "seed_project_author",
+          name: "Mio Mideal",
+          role: "ADMIO",
+          email: "seed-projects@example.com",
+        },
+        select: { id: true },
+      })
+    ).id;
+
+  await tx.post.create({
+    data: {
+      ...toastyyProject,
+      createdById,
+    },
+  });
+  return true;
+}
+
 async function main() {
   await prisma.$transaction(async (tx) => {
     for (const slot of slots) {
@@ -248,6 +299,8 @@ async function main() {
     });
   });
 
+  const addedToastyy = await prisma.$transaction((tx) => ensureToastyy(tx));
+
   const [slotCount, bidCount] = await Promise.all([
     prisma.sponsorSlot.count(),
     prisma.sponsorBid.count({ where: { id: { startsWith: "seed_sponsor_" } } }),
@@ -255,6 +308,11 @@ async function main() {
 
   console.log(
     `Sponsor seed complete: ${slotCount} spots, ${bidCount} test bids.`,
+  );
+  console.log(
+    addedToastyy
+      ? "Added the Toastyy project to the public roster."
+      : "Toastyy project already present.",
   );
   console.log(
     "Fixtures: four occupied spots, two empty spots, plus pending/outbid/cancelled history.",

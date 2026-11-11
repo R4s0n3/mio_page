@@ -17,7 +17,8 @@ incremental and cannot bootstrap a completely empty database by themselves.
 
 The seed is idempotent and creates four occupied sponsor spots, two empty spots, and representative
 pending, outbid, and cancelled bid history. It only upserts records with the fixed sponsor fixture
-IDs and does not clear unrelated shop data.
+IDs and does not clear unrelated shop data. It also adds the Toastyy project when that row is
+missing, and creates a local fixture author only when the database has no users.
 
 ## Stripe payment setup
 
