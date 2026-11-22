@@ -18,7 +18,7 @@ export default function ProjectsGrid() {
     const projectItem = {
       ...project,
       image: actualImage === "" ? "/SVG/logo.svg" : actualImage,
-      badge: isTappenProject(project) ? tappenCopy.de.badge : undefined,
+      badge: isTappenProject(project) ? tappenCopy.badge : undefined,
     };
 
     return <ProjectItem key={project.id} {...projectItem} />;
