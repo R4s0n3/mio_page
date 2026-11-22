@@ -7,8 +7,10 @@ import {
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
+import { isTappenProject, tappenCopy } from "@/content/tappen-update";
 import LoadingSpinner from "../_components/loading-spinner";
 import ProjectItem from "../_components/project-item";
+import { TappenActionLinks } from "../_components/tappen-update";
 import { api, type RouterOutputs } from "@/trpc/react";
 
 type Project = RouterOutputs["project"]["getAllPublic"][number];
@@ -54,6 +56,7 @@ export default function ProjectsPageView() {
             name={project.name}
             url={project.url}
             image={normalizeImage(project)}
+            badge={isTappenProject(project) ? tappenCopy.de.badge : undefined}
             isSelected={selectedProjectId === project.id}
             onSelect={() => handleSelectProject(project.id)}
           />
@@ -76,13 +79,25 @@ export default function ProjectsPageView() {
             </button>
           </div>
           <>
-            <h2 className="font-headline text-4xl text-headings">
-              {selectedProject.name}
-            </h2>
+            <div className="flex flex-wrap items-center gap-3">
+              <h2 className="font-headline text-4xl text-headings">
+                {selectedProject.name}
+              </h2>
+              {isTappenProject(selectedProject) ? (
+                <span
+                  lang="de"
+                  className="rounded-full bg-highlight-magenta px-3 py-1 font-subhead text-sm uppercase text-primary-900"
+                >
+                  {tappenCopy.de.badge}
+                </span>
+              ) : null}
+            </div>
             <p className="whitespace-pre-line font-text text-base leading-7 text-body">
               {getProjectDescription(selectedProject)}
             </p>
-            {selectedProject.url ? (
+            {isTappenProject(selectedProject) ? (
+              <TappenActionLinks variant="text" />
+            ) : selectedProject.url ? (
               <Link
                 className="mt-2 inline-flex w-fit items-center gap-2 font-subhead text-lg uppercase text-highlight-cyan underline underline-offset-4 transition duration-300 hover:text-accent"
                 href={selectedProject.url}

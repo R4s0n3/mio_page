@@ -6,6 +6,7 @@ import ProjectsGrid from "./_components/projects-grid";
 import CreatorSection from "./_components/creator-section";
 import MerchCarousel from "./_components/merch-carousel";
 import SponsorSpot from "./_components/sponsor-spot";
+import TappenUpdate from "./_components/tappen-update";
 
 export default async function Home() {
   return (
@@ -36,6 +37,7 @@ export default async function Home() {
             </p>
           </div>
         </section>
+        <TappenUpdate />
         <section
           id="projects"
           className="container flex flex-col gap-8 px-4 py-8"
