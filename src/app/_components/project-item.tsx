@@ -10,6 +10,7 @@ export type ProjectItemProps = {
   name: string;
   url: string | null;
   image: string;
+  badge?: string;
   isSelected?: boolean;
   onSelect?: () => void;
 };
@@ -36,9 +37,19 @@ export default function ProjectItem(project: ProjectItemProps) {
       className={`group relative flex aspect-video w-full cursor-pointer flex-row-reverse items-center justify-between rounded border-2 bg-secondary-800/20 p-4 text-left font-subhead text-2xl transition-all duration-500 hover:scale-105 hover:text-accent ${
         project.isSelected
           ? "border-highlight-cyan text-highlight-cyan"
-          : "border-secondary-800/20"
+          : project.badge
+            ? "border-highlight-magenta/80"
+            : "border-secondary-800/20"
       }`}
     >
+      {project.badge ? (
+        <span
+          lang="de"
+          className="absolute left-3 top-3 z-30 rounded-full bg-highlight-magenta px-2 py-1 font-subhead text-[11px] uppercase leading-none text-primary-900"
+        >
+          {project.badge}
+        </span>
+      ) : null}
       <h3 className="min-w-0 break-words pr-8 text-right leading-none">
         {project.name}
       </h3>

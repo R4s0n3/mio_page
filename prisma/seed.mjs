@@ -173,13 +173,22 @@ const toastyyProject = {
   status: "PUBLIC",
 };
 
-async function ensureToastyy(tx) {
-  const existing = await tx.post.findFirst({
-    where: { type: "PROJECT", name: toastyyProject.name },
-    select: { id: true },
-  });
-  if (existing) return false;
+const tappenProject = {
+  name: "Tappen App",
+  url: "https://tappen.app",
+  type: "PROJECT",
+  image: "/assets/apps/tappen.png",
+  content: `Deutsch
 
+Tappen ist ein lockeres soziales Partyspiel für Runden mit deinen Leuten. Karten drehen sich jetzt in 3D und zeigen eine echte Rückseite. Neue Karten kommen verdeckt an und der Host tippt sie auf. Die Rückseiten gibt es in farbigen Skins mit einem glänzenden Tappen Symbol. Legendäre Skins leuchten noch stärker. Der Einladungscode bleibt während der Runde sichtbar. Gäste können Karten ziehen. Raumcodes tippst du immer in Großbuchstaben, so wird das Beitreten leichter. Das Kartenset Tappen Home schaltet mit dem QR Code dauerhaft Premium und einen Premium Skin frei.
+
+English
+
+Tappen is a fun social party game for rounds with your people. Cards now flip in 3D with a real card back. New cards are dealt face down and the host taps to reveal them. Card backs come in full color skins with a glossy Tappen symbol. Legendary skins get a stronger shine. The room invite code stays visible during the round. Guests can drag cards. Room codes are always entered in capitals, so joining is easier. The Tappen Home card set unlocks permanent premium and a premium card skin with its QR code.`,
+  status: "FEATURED",
+};
+
+async function projectAuthorId(tx) {
   const author =
     (await tx.user.findFirst({
       where: { role: "ADMIO" },
@@ -191,27 +200,66 @@ async function ensureToastyy(tx) {
       select: { id: true },
     }));
 
-  const createdById =
-    author?.id ??
-    (
-      await tx.user.create({
-        data: {
-          id: "seed_project_author",
-          name: "Mio Mideal",
-          role: "ADMIO",
-          email: "seed-projects@example.com",
-        },
-        select: { id: true },
-      })
-    ).id;
+  if (author) return author.id;
+
+  const created = await tx.user.create({
+    data: {
+      id: "seed_project_author",
+      name: "Mio Mideal",
+      role: "ADMIO",
+      email: "seed-projects@example.com",
+    },
+    select: { id: true },
+  });
+  return created.id;
+}
+
+async function ensureToastyy(tx) {
+  const existing = await tx.post.findFirst({
+    where: { type: "PROJECT", name: toastyyProject.name },
+    select: { id: true },
+  });
+  if (existing) return false;
 
   await tx.post.create({
     data: {
       ...toastyyProject,
-      createdById,
+      createdById: await projectAuthorId(tx),
     },
   });
   return true;
+}
+
+async function ensureTappen(tx) {
+  const existing = await tx.post.findFirst({
+    where: {
+      type: "PROJECT",
+      OR: [
+        { name: { contains: "tappen" } },
+        { url: { contains: "tappen.app" } },
+      ],
+    },
+    select: { id: true },
+  });
+
+  if (existing) {
+    await tx.post.update({
+      where: { id: existing.id },
+      data: {
+        url: tappenProject.url,
+        content: tappenProject.content,
+      },
+    });
+    return "updated";
+  }
+
+  await tx.post.create({
+    data: {
+      ...tappenProject,
+      createdById: await projectAuthorId(tx),
+    },
+  });
+  return "added";
 }
 
 async function main() {
@@ -300,6 +348,7 @@ async function main() {
   });
 
   const addedToastyy = await prisma.$transaction((tx) => ensureToastyy(tx));
+  const tappenResult = await prisma.$transaction((tx) => ensureTappen(tx));
 
   const [slotCount, bidCount] = await Promise.all([
     prisma.sponsorSlot.count(),
@@ -313,6 +362,11 @@ async function main() {
     addedToastyy
       ? "Added the Toastyy project to the public roster."
       : "Toastyy project already present.",
+  );
+  console.log(
+    tappenResult === "added"
+      ? "Added the Tappen project to the public roster."
+      : "Refreshed the Tappen project description.",
   );
   console.log(
     "Fixtures: four occupied spots, two empty spots, plus pending/outbid/cancelled history.",
