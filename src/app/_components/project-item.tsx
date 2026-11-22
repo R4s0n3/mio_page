@@ -43,10 +43,7 @@ export default function ProjectItem(project: ProjectItemProps) {
       }`}
     >
       {project.badge ? (
-        <span
-          lang="de"
-          className="absolute left-3 top-3 z-30 rounded-full bg-highlight-magenta px-2 py-1 font-subhead text-[11px] uppercase leading-none text-primary-900"
-        >
+        <span className="absolute left-3 top-3 z-30 rounded-full bg-highlight-magenta px-2 py-1 font-subhead text-[11px] uppercase leading-none text-primary-900">
           {project.badge}
         </span>
       ) : null}

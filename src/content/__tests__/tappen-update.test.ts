@@ -14,36 +14,39 @@ import {
 } from "@/content/tappen-update";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "../../..");
+const englishMigration = join(
+  root,
+  "prisma/migrations/20261122220000_tappen_update_english/migration.sql",
+);
+const appliedMigration = join(
+  root,
+  "prisma/migrations/20261122120000_tappen_project_update/migration.sql",
+);
 
 const userFacing = [
-  tappenCopy.de.badge,
-  tappenCopy.de.title,
-  tappenCopy.de.language,
-  tappenCopy.de.play,
-  tappenCopy.de.info,
-  tappenCopy.de.body,
-  tappenCopy.en.badge,
-  tappenCopy.en.title,
-  tappenCopy.en.language,
-  tappenCopy.en.play,
-  tappenCopy.en.info,
-  tappenCopy.en.body,
+  tappenCopy.badge,
+  tappenCopy.title,
+  tappenCopy.play,
+  tappenCopy.info,
+  tappenCopy.body,
   tappenProjectName,
+  tappenProjectContent,
 ];
 
 describe("tappen update copy", () => {
-  it("uses casual party game wording in German and English", () => {
-    expect(tappenCopy.de.body).toMatch(/Partyspiel/);
-    expect(tappenCopy.en.body.toLowerCase()).toMatch(/social party game/);
-    expect(tappenProjectContent.startsWith("Deutsch\n")).toBe(true);
-    expect(tappenProjectContent).toContain("\n\nEnglish\n\n");
+  it("uses English party game wording", () => {
+    expect(tappenCopy.body.toLowerCase()).toMatch(/social party game/);
+    expect(tappenCopy.badge).toBe("New");
+    expect(tappenCopy.play).toBe("Play now");
+    expect(tappenCopy.info).toBe("More info / Home Edition");
+    expect(tappenProjectContent).toBe(tappenCopy.body);
   });
 
   it("avoids dashes and wording the studio does not use", () => {
     const blob = userFacing.join("\n");
     expect(blob).not.toMatch(/[\u2010\u2011\u2012\u2013\u2014\u2015\u2212-]/);
     expect(blob.toLowerCase()).not.toMatch(
-      /\bnot\b|\bkein(?:e|en|er)?\b|\bnicht\b|therap|trink|drinking|newsletter/,
+      /\bnot\b|\bkein(?:e|en|er)?\b|\bnicht\b|therap|trink|drinking|newsletter|deutsch|partyspiel|jetzt spielen|mehr infos|\bneu\b/,
     );
   });
 
@@ -79,24 +82,17 @@ describe("tappen update copy", () => {
     ).toBe(false);
   });
 
-  it("ships the same description in the migration and the local seed", () => {
-    const migration = readFileSync(
-      join(
-        root,
-        "prisma/migrations/20261122120000_tappen_project_update/migration.sql",
-      ),
-      "utf8",
-    );
+  it("keeps the applied migration and ships English copy in a new one", () => {
+    const applied = readFileSync(appliedMigration, "utf8");
+    const migration = readFileSync(englishMigration, "utf8");
     const seed = readFileSync(join(root, "prisma/seed.mjs"), "utf8");
 
+    expect(applied).toContain("Partyspiel");
     expect(migration).toContain(tappenProjectContent);
-    expect(migration).toContain(tappenProjectUrl);
-    expect(migration).toContain(
-      "LOWER(TRIM(`name`)) IN ('tappen', 'tappen app')",
-    );
-    expect(migration).not.toContain("LIKE '%tappen%'");
+    expect(migration).not.toContain("Partyspiel");
+    expect(migration).not.toContain("Deutsch");
     expect(seed).toContain(tappenProjectContent);
+    expect(seed).not.toContain("Partyspiel");
     expect(seed).toContain(tappenProjectName);
-    expect(seed).toContain('name: { in: ["Tappen", "Tappen App"] }');
   });
 });

@@ -26,52 +26,18 @@ export default function TappenUpdate() {
         <div className="relative grid items-center gap-8 lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-12">
           <TappenCardFan />
           <div className="flex min-w-0 flex-col gap-5">
-            <div className="flex flex-wrap items-center gap-2">
-              <span
-                lang="de"
-                className="rounded-full bg-highlight-magenta px-3 py-1 font-subhead text-sm uppercase text-primary-900"
-              >
-                {tappenCopy.de.badge}
-              </span>
-              <span
-                lang="en"
-                className="rounded-full border border-headings/30 px-3 py-1 font-subhead text-sm uppercase text-headings/80"
-              >
-                {tappenCopy.en.badge}
-              </span>
-            </div>
+            <span className="w-fit rounded-full bg-highlight-magenta px-3 py-1 font-subhead text-sm uppercase text-primary-900">
+              {tappenCopy.badge}
+            </span>
             <h2
               id="tappen-update-heading"
               className="font-headline text-4xl font-extrabold uppercase leading-none text-highlight-cyan underline underline-offset-8 sm:text-6xl"
             >
-              {tappenCopy.de.title}
+              {tappenCopy.title}
             </h2>
-            <div className="flex flex-col gap-4">
-              <p
-                lang="de"
-                className="font-subhead text-xs uppercase tracking-[0.14em] text-highlight-cyan"
-              >
-                {tappenCopy.de.language}
-              </p>
-              <p
-                lang="de"
-                className="font-text text-base leading-7 text-headings sm:text-lg"
-              >
-                {tappenCopy.de.body}
-              </p>
-              <p
-                lang="en"
-                className="font-subhead text-xs uppercase tracking-[0.14em] text-body/50"
-              >
-                {tappenCopy.en.language}
-              </p>
-              <p
-                lang="en"
-                className="font-text text-sm leading-6 text-body/80 sm:text-base"
-              >
-                {tappenCopy.en.body}
-              </p>
-            </div>
+            <p className="font-text text-base leading-7 text-headings sm:text-lg">
+              {tappenCopy.body}
+            </p>
             <TappenActionLinks variant="solid" />
           </div>
         </div>
@@ -137,10 +103,7 @@ export function TappenActionLinks({ variant }: { variant: "solid" | "text" }) {
         target="_blank"
         rel="noreferrer"
       >
-        <ActionLabel
-          primary={tappenCopy.de.play}
-          secondary={tappenCopy.en.play}
-        />
+        {tappenCopy.play}
         <ArrowTopRightOnSquareIcon className="size-5 shrink-0" />
       </Link>
       <Link
@@ -149,32 +112,9 @@ export function TappenActionLinks({ variant }: { variant: "solid" | "text" }) {
         target="_blank"
         rel="noreferrer"
       >
-        <ActionLabel
-          primary={tappenCopy.de.info}
-          secondary={tappenCopy.en.info}
-        />
+        {tappenCopy.info}
         <ArrowTopRightOnSquareIcon className="size-5 shrink-0" />
       </Link>
     </div>
-  );
-}
-
-function ActionLabel({
-  primary,
-  secondary,
-}: {
-  primary: string;
-  secondary: string;
-}) {
-  return (
-    <span className="flex flex-col items-start text-left">
-      <span lang="de">{primary}</span>
-      <span
-        lang="en"
-        className="font-text text-xs font-normal normal-case tracking-normal opacity-80"
-      >
-        {secondary}
-      </span>
-    </span>
   );
 }
