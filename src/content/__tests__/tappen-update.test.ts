@@ -36,6 +36,9 @@ const userFacing = [
 describe("tappen update copy", () => {
   it("uses English party game wording", () => {
     expect(tappenCopy.body.toLowerCase()).toMatch(/social party game/);
+    expect(
+      tappenCopy.body.split(/[.!?]/).filter((part) => part.trim()).length,
+    ).toBeLessThanOrEqual(2);
     expect(tappenCopy.badge).toBe("New");
     expect(tappenCopy.play).toBe("Play now");
     expect(tappenCopy.info).toBe("More info / Home Edition");

@@ -179,7 +179,7 @@ const tappenProject = {
   type: "PROJECT",
   image: "/assets/apps/tappen.png",
   content:
-    "Tappen is a fun social party game for rounds with your people. Cards now flip in 3D with a real card back. New cards are dealt face down and the host taps to reveal them. Card backs come in full color skins with a glossy Tappen symbol. Legendary skins get a stronger shine. The room invite code stays visible during the round. Guests can drag cards. Room codes are always entered in capitals, so joining is easier. The Tappen Home card set unlocks permanent premium and a premium card skin with its QR code.",
+    "Tappen is a fun social party game. Cards now flip in 3D with glossy skins, and a Home Edition QR code unlocks permanent premium.",
   status: "FEATURED",
 };
 
