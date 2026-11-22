@@ -56,9 +56,7 @@ export default function ProjectsPageView() {
             name={project.name}
             url={project.url}
             image={normalizeImage(project)}
-            badge={
-              isTappenProject(project.name) ? tappenCopy.de.badge : undefined
-            }
+            badge={isTappenProject(project) ? tappenCopy.de.badge : undefined}
             isSelected={selectedProjectId === project.id}
             onSelect={() => handleSelectProject(project.id)}
           />
@@ -85,7 +83,7 @@ export default function ProjectsPageView() {
               <h2 className="font-headline text-4xl text-headings">
                 {selectedProject.name}
               </h2>
-              {isTappenProject(selectedProject.name) ? (
+              {isTappenProject(selectedProject) ? (
                 <span
                   lang="de"
                   className="rounded-full bg-highlight-magenta px-3 py-1 font-subhead text-sm uppercase text-primary-900"
@@ -97,7 +95,7 @@ export default function ProjectsPageView() {
             <p className="whitespace-pre-line font-text text-base leading-7 text-body">
               {getProjectDescription(selectedProject)}
             </p>
-            {isTappenProject(selectedProject.name) ? (
+            {isTappenProject(selectedProject) ? (
               <TappenActionLinks variant="text" />
             ) : selectedProject.url ? (
               <Link

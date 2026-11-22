@@ -235,8 +235,9 @@ async function ensureTappen(tx) {
     where: {
       type: "PROJECT",
       OR: [
-        { name: { contains: "tappen" } },
-        { url: { contains: "tappen.app" } },
+        { name: { in: ["Tappen", "Tappen App"] } },
+        { url: { contains: "://tappen.app" } },
+        { url: { contains: ".tappen.app" } },
       ],
     },
     select: { id: true },

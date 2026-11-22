@@ -15,8 +15,9 @@ Tappen is a fun social party game for rounds with your people. Cards now flip in
   `updatedAt` = CURRENT_TIMESTAMP(3)
 WHERE `type` = 'PROJECT'
   AND (
-    LOWER(`name`) LIKE '%tappen%'
-    OR `url` LIKE '%tappen.app%'
+    LOWER(TRIM(`name`)) IN ('tappen', 'tappen app')
+    OR `url` LIKE '%://tappen.app%'
+    OR `url` LIKE '%://%.tappen.app%'
   );
 
 INSERT INTO `Post` (
@@ -54,8 +55,9 @@ WHERE (
     FROM `Post`
     WHERE `type` = 'PROJECT'
       AND (
-        LOWER(`name`) LIKE '%tappen%'
-        OR `url` LIKE '%tappen.app%'
+        LOWER(TRIM(`name`)) IN ('tappen', 'tappen app')
+        OR `url` LIKE '%://tappen.app%'
+        OR `url` LIKE '%://%.tappen.app%'
       )
   ) AS `existing_tappen`
 ) = 0

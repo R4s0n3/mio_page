@@ -54,10 +54,29 @@ describe("tappen update copy", () => {
     expect(tappenProjectImage).toBe("/assets/apps/tappen.png");
   });
 
-  it("recognizes the existing Tappen project name", () => {
-    expect(isTappenProject("Tappen App")).toBe(true);
-    expect(isTappenProject("tappen")).toBe(true);
-    expect(isTappenProject("Toastyy")).toBe(false);
+  it("recognizes the Tappen project by exact name or official host", () => {
+    expect(isTappenProject({ name: "Tappen App" })).toBe(true);
+    expect(isTappenProject({ name: "tappen" })).toBe(true);
+    expect(
+      isTappenProject({
+        name: "Party Cards",
+        url: "https://play.tappen.app",
+      }),
+    ).toBe(true);
+    expect(
+      isTappenProject({
+        name: "Party Cards",
+        url: "https://www.tappen.app",
+      }),
+    ).toBe(true);
+    expect(isTappenProject({ name: "Toastyy" })).toBe(false);
+    expect(isTappenProject({ name: "Etappenplaner" })).toBe(false);
+    expect(
+      isTappenProject({
+        name: "Etappenplaner",
+        url: "https://example.com/etappen",
+      }),
+    ).toBe(false);
   });
 
   it("ships the same description in the migration and the local seed", () => {
@@ -72,7 +91,12 @@ describe("tappen update copy", () => {
 
     expect(migration).toContain(tappenProjectContent);
     expect(migration).toContain(tappenProjectUrl);
+    expect(migration).toContain(
+      "LOWER(TRIM(`name`)) IN ('tappen', 'tappen app')",
+    );
+    expect(migration).not.toContain("LIKE '%tappen%'");
     expect(seed).toContain(tappenProjectContent);
     expect(seed).toContain(tappenProjectName);
+    expect(seed).toContain('name: { in: ["Tappen", "Tappen App"] }');
   });
 });

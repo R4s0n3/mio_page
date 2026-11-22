@@ -36,6 +36,22 @@ export const tappenProjectContent = [
   tappenCopy.en.body,
 ].join("\n");
 
-export function isTappenProject(name: string) {
-  return name.toLocaleLowerCase("de").includes("tappen");
+const tappenProjectNames = new Set(["tappen", "tappen app"]);
+
+export function isTappenProject(project: {
+  name: string;
+  url?: string | null;
+}) {
+  const name = project.name.trim().toLocaleLowerCase("de").replace(/\s+/g, " ");
+  return tappenProjectNames.has(name) || hasTappenHost(project.url);
+}
+
+function hasTappenHost(url: string | null | undefined) {
+  if (!url) return false;
+  try {
+    const host = new URL(url).hostname.toLocaleLowerCase("en");
+    return host === "tappen.app" || host.endsWith(".tappen.app");
+  } catch {
+    return false;
+  }
 }

@@ -18,7 +18,7 @@ export default function ProjectsGrid() {
     const projectItem = {
       ...project,
       image: actualImage === "" ? "/SVG/logo.svg" : actualImage,
-      badge: isTappenProject(project.name) ? tappenCopy.de.badge : undefined,
+      badge: isTappenProject(project) ? tappenCopy.de.badge : undefined,
     };
 
     return <ProjectItem key={project.id} {...projectItem} />;
@@ -36,6 +36,9 @@ export default function ProjectsGrid() {
   );
 }
 
-function byTappenFirst(a: { name: string }, b: { name: string }) {
-  return Number(isTappenProject(b.name)) - Number(isTappenProject(a.name));
+function byTappenFirst(
+  a: { name: string; url: string | null },
+  b: { name: string; url: string | null },
+) {
+  return Number(isTappenProject(b)) - Number(isTappenProject(a));
 }
